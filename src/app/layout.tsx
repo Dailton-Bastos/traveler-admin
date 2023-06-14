@@ -4,7 +4,7 @@ import { Heebo } from 'next/font/google';
 const font = Heebo({ subsets: ['latin'] });
 
 export const metadata = {
-  title: 'Login Dashboard | Traveler',
+  title: 'Traveler',
   description: 'Cadastre e gerencie cidades',
 };
 
