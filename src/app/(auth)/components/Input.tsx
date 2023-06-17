@@ -10,11 +10,12 @@ interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   error?: boolean;
   label?: string;
   filled?: boolean;
-  isValid?: boolean;
 }
 
 export const Input = React.forwardRef<HTMLInputElement, InputProps>(
-  ({ error, filled, isValid, id, label, disabled, ...props }, ref) => {
+  ({ error, filled, id, label, disabled, ...props }, ref) => {
+    const isValid = filled && !error;
+
     return (
       <div className="flex flex-col relative group">
         <input

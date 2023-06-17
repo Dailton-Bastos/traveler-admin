@@ -10,11 +10,10 @@ interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   error?: boolean;
   label?: string;
   filled?: boolean;
-  isValid?: boolean;
 }
 
 export const InputPassword = React.forwardRef<HTMLInputElement, InputProps>(
-  ({ error, filled, isValid, id, label, disabled, ...props }, ref) => {
+  ({ error, filled, id, label, disabled, ...props }, ref) => {
     const [showPassword, setShowPassword] = React.useState(false);
 
     const Icon = showPassword ? AiOutlineEye : AiOutlineEyeInvisible;

@@ -4,14 +4,14 @@ import React from 'react';
 import { BiCheck } from 'react-icons/bi';
 import { twMerge } from 'tailwind-merge';
 
-type InputProps = React.InputHTMLAttributes<HTMLInputElement>;
+interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
+  keepLogged?: boolean;
+}
 
 const Input: React.ForwardRefRenderFunction<HTMLInputElement, InputProps> = (
-  { ...props },
+  { keepLogged, ...props },
   ref
 ) => {
-  const [keepLogged, setKeepLogged] = React.useState(false);
-
   return (
     <div
       className="
@@ -77,7 +77,6 @@ const Input: React.ForwardRefRenderFunction<HTMLInputElement, InputProps> = (
           type="checkbox"
           id="keep_logged"
           checked={keepLogged}
-          onChange={() => setKeepLogged((prev) => !prev)}
           className="absolute w-6 h-6 opacity-0 cursor-pointer"
           {...props}
           ref={ref}

@@ -28,7 +28,13 @@ const AuthLayout = ({ children }: AuthLayoutProps) => {
           grid-cols-2
         "
       >
-        <Image src="/images/hero.jpg" alt="" width={798} height={820} />
+        <Image
+          src="/images/hero.jpg"
+          priority
+          alt=""
+          width={798}
+          height={820}
+        />
 
         <div className="py-10 px-40">
           <AuthContent>{children}</AuthContent>
