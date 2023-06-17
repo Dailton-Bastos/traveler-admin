@@ -1,7 +1,6 @@
 import './globals.css';
-import { Heebo } from 'next/font/google';
 
-const font = Heebo({ subsets: ['latin'] });
+import { heebo, barlow, roboto } from './fonts';
 
 export const metadata = {
   title: 'Traveler',
@@ -14,8 +13,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
-      <body className={font.className}>{children}</body>
+    <html
+      lang="en"
+      className={`${heebo.variable} ${barlow.variable} ${roboto.variable}`}
+    >
+      <body className="font-heebo">{children}</body>
     </html>
   );
 }

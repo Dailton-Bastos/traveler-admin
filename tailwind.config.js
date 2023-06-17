@@ -6,7 +6,13 @@ module.exports = {
     './src/app/**/*.{js,ts,jsx,tsx,mdx}',
   ],
   theme: {
-    extend: {},
+    extend: {
+      fontFamily: {
+        heebo: ['var(--font-heebo)'],
+        barlow: ['var(--font-barlow)'],
+        roboto: ['var(--font-roboto)'],
+      },
+    },
   },
   plugins: [],
 };

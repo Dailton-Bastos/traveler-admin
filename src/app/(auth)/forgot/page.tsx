@@ -1,17 +1,16 @@
 import React from 'react';
+import { ForgotContent } from './components/ForgotContent';
 
-import { FormContent } from './components/FormContent';
-
-const Login = () => {
+const Forgot = () => {
   return (
     <div className="w-full">
       <h1 className="text-4xl font-semibold font-barlow text-[#123952]">
-        Fazer login
+        Recuperar senha
       </h1>
 
-      <FormContent />
+      <ForgotContent />
     </div>
   );
 };
 
-export default Login;
+export default Forgot;
