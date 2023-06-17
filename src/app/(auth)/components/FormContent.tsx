@@ -2,6 +2,7 @@
 
 import React from 'react';
 import { FiAlertCircle } from 'react-icons/fi';
+import { RotatingLines } from 'react-loader-spinner';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 
@@ -11,6 +12,8 @@ import * as zod from 'zod';
 import { Input } from './Input';
 import { InputPassword } from './InputPassword';
 import { InputCheckbox } from './InputCheckbox';
+import { supabaseClient } from '~/libs/supabaseClient';
+import { useRouter } from 'next/navigation';
 
 const signInFormValidationSchema = zod.object({
   email: zod
@@ -32,6 +35,8 @@ const signInFormValidationSchema = zod.object({
 type SignInFormData = zod.infer<typeof signInFormValidationSchema>;
 
 export const FormContent = () => {
+  const router = useRouter();
+
   const { register, watch, handleSubmit, formState } = useForm<SignInFormData>({
     resolver: zodResolver(signInFormValidationSchema),
     mode: 'onChange',
@@ -42,17 +47,35 @@ export const FormContent = () => {
     },
   });
 
-  const { errors } = formState;
+  const { errors, isSubmitting } = formState;
 
-  const onSubmit: SubmitHandler<SignInFormData> = React.useCallback((data) => {
-    console.log('DATA', data);
-  }, []);
+  const onSubmit: SubmitHandler<SignInFormData> = React.useCallback(
+    async (values) => {
+      const { data, error } = await supabaseClient.auth.signInWithPassword({
+        email: values.email,
+        password: values.password,
+      });
+
+      if (error) {
+        console.error(error);
+
+        return;
+      }
+
+      if (data) {
+        alert('User logged');
+
+        router.replace('/dashboard');
+      }
+    },
+    [router]
+  );
 
   const email = watch('email');
   const password = watch('password');
   const keepLogged = watch('keepLogged');
 
-  const isSubmitDisabled = !email || !password;
+  const isSubmitDisabled = !email || !password || isSubmitting;
 
   return (
     <form
@@ -125,6 +148,10 @@ export const FormContent = () => {
         type="submit"
         disabled={isSubmitDisabled}
         className="
+          flex
+          items-center
+          justify-center
+          gap-4
           text-white
           bg-[#F25D27]
           cursor-pointer
@@ -138,6 +165,13 @@ export const FormContent = () => {
           h-[72px]
         "
       >
+        <RotatingLines
+          strokeColor="#fff"
+          strokeWidth="3"
+          animationDuration="0.95"
+          width="30"
+          visible={isSubmitting}
+        />
         Acessar plataforma
       </button>
 
