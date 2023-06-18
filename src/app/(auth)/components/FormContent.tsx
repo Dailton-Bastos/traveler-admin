@@ -3,6 +3,7 @@
 import React from 'react';
 import { FiAlertCircle } from 'react-icons/fi';
 import { RotatingLines } from 'react-loader-spinner';
+import { toast } from 'react-hot-toast';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 
@@ -51,21 +52,23 @@ export const FormContent = () => {
 
   const onSubmit: SubmitHandler<SignInFormData> = React.useCallback(
     async (values) => {
-      const { data, error } = await supabaseClient.auth.signInWithPassword({
-        email: values.email,
-        password: values.password,
-      });
+      try {
+        const { data, error } = await supabaseClient.auth.signInWithPassword({
+          email: values.email,
+          password: values.password,
+        });
 
-      if (error) {
-        console.error(error);
+        if (error) {
+          return toast.error(error?.message);
+        }
 
-        return;
-      }
+        if (data) {
+          toast.success('Login com sucesso!');
 
-      if (data) {
-        alert('User logged');
-
-        router.replace('/dashboard');
+          router.replace('/dashboard');
+        }
+      } catch (error) {
+        toast.error('Ocorreu um erro!');
       }
     },
     [router]

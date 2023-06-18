@@ -1,6 +1,7 @@
 import './globals.css';
 
 import { heebo, barlow, roboto } from './fonts';
+import { ToasterProvider } from '~/providers/ToasterProvider';
 
 export const metadata = {
   title: 'Traveler',
@@ -17,7 +18,11 @@ export default function RootLayout({
       lang="en"
       className={`${heebo.variable} ${barlow.variable} ${roboto.variable}`}
     >
-      <body className="font-heebo">{children}</body>
+      <body className="font-heebo">
+        <ToasterProvider />
+
+        {children}
+      </body>
     </html>
   );
 }
