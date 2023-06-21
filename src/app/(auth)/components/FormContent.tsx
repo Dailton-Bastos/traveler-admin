@@ -5,16 +5,17 @@ import { FiAlertCircle } from 'react-icons/fi';
 import { RotatingLines } from 'react-loader-spinner';
 import { toast } from 'react-hot-toast';
 import { useForm, SubmitHandler } from 'react-hook-form';
+
+import { useSupabaseClient } from '@supabase/auth-helpers-react';
 import { zodResolver } from '@hookform/resolvers/zod';
 
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import * as zod from 'zod';
 
 import { Input } from './Input';
 import { InputPassword } from './InputPassword';
 import { InputCheckbox } from './InputCheckbox';
-import { supabaseClient } from '~/libs/supabaseClient';
-import { useRouter } from 'next/navigation';
 
 const signInFormValidationSchema = zod.object({
   email: zod
@@ -38,6 +39,8 @@ type SignInFormData = zod.infer<typeof signInFormValidationSchema>;
 export const FormContent = () => {
   const router = useRouter();
 
+  const supabaseClient = useSupabaseClient();
+
   const { register, watch, handleSubmit, formState } = useForm<SignInFormData>({
     resolver: zodResolver(signInFormValidationSchema),
     mode: 'onChange',
@@ -54,8 +57,7 @@ export const FormContent = () => {
     async (values) => {
       try {
         const { data, error } = await supabaseClient.auth.signInWithPassword({
-          email: values.email,
-          password: values.password,
+          ...values,
         });
 
         if (error) {
@@ -65,13 +67,14 @@ export const FormContent = () => {
         if (data) {
           toast.success('Login com sucesso!');
 
+          router.refresh();
           router.replace('/dashboard');
         }
       } catch (error) {
         toast.error('Ocorreu um erro!');
       }
     },
-    [router]
+    [router, supabaseClient]
   );
 
   const email = watch('email');
