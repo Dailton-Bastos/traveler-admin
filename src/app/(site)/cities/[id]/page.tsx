@@ -1,7 +1,13 @@
 import React from 'react';
+import { Header } from '~/components/Header';
 
-const PageProfile = () => {
-  return <div>PageProfile</div>;
+const Profile = () => {
+  return (
+    <>
+      <Header>Profile</Header>
+      <div>City Profile</div>
+    </>
+  );
 };
 
-export default PageProfile;
+export default Profile;

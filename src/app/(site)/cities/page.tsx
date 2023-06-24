@@ -1,7 +1,13 @@
 import React from 'react';
+import { Header } from '~/components/Header';
 
 const Cities = () => {
-  return <div>Cities</div>;
+  return (
+    <>
+      <Header>Cidades</Header>
+      <div>Cities</div>
+    </>
+  );
 };
 
 export default Cities;
