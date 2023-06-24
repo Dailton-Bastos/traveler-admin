@@ -1,4 +1,5 @@
 import React from 'react';
+import { Sidebar } from '~/components/Sidebar';
 
 interface DashboardLayoutProps {
   children: React.ReactNode;
@@ -9,7 +10,6 @@ export const metadata = {
 };
 
 const DashboardLayout = ({ children }: DashboardLayoutProps) => {
-  return <section>{children}</section>;
+  return <Sidebar>{children}</Sidebar>;
 };
-
 export default DashboardLayout;

@@ -68,7 +68,7 @@ export const FormContent = () => {
           toast.success('Login com sucesso!');
 
           router.refresh();
-          router.replace('/dashboard');
+          router.replace('/cities');
         }
       } catch (error) {
         toast.error('Ocorreu um erro!');

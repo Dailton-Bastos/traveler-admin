@@ -12,6 +12,9 @@ module.exports = {
         barlow: ['var(--font-barlow)'],
         roboto: ['var(--font-roboto)'],
       },
+      colors: {
+        'orange-600': '#F25D27',
+      },
     },
   },
   plugins: [],

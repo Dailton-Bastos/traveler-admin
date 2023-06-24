@@ -20,7 +20,7 @@ export async function middleware(req: NextRequest) {
     (user && req.nextUrl.pathname === '/forgot');
 
   if (redirectToDashboard) {
-    return NextResponse.redirect(new URL('/dashboard', req.url));
+    return NextResponse.redirect(new URL('/cities', req.url));
   }
 
   if (!user && req.nextUrl.pathname !== '/') {
@@ -31,5 +31,5 @@ export async function middleware(req: NextRequest) {
 }
 
 export const config = {
-  matcher: ['/', '/forgot', '/dashboard'],
+  matcher: ['/', '/forgot', '/cities'],
 };
