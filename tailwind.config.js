@@ -16,6 +16,7 @@ module.exports = {
         'orange-600': '#F25D27',
         'blue-900': '#123952',
         'green-500': '#51B853',
+        'white-alpha-700': 'rgba(var(--white-alpha-700), 0.70)',
       },
     },
   },
