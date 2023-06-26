@@ -1,11 +1,17 @@
+'use client';
+
 import React from 'react';
 import { FiPlus, FiAlertCircle } from 'react-icons/fi';
+
+import { useRouter } from 'next/navigation';
 
 import { Button } from '~/components/Button';
 import { Category } from '~/components/Category';
 import { Header } from '~/components/Header';
 
 const Categories = () => {
+  const router = useRouter();
+
   return (
     <>
       <Header>
@@ -22,7 +28,7 @@ const Categories = () => {
             </span>
           </div>
 
-          <Button>
+          <Button onClick={() => router.push('/categories/new')}>
             <div className="flex items-center gap-x-1">
               <FiPlus color="#fff" />
               Adicionar uma categoria
