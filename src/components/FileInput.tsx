@@ -1,33 +1,55 @@
 'use client';
 
 import React from 'react';
-import { useDropzone } from 'react-dropzone';
+import { Accept, useDropzone } from 'react-dropzone';
+import { useFormContext } from 'react-hook-form';
 import { twMerge } from 'tailwind-merge';
 import { FileInputPreview } from './FileInputPreview';
 
 interface FileInputProps {
   children: React.ReactNode;
+  name: string;
   className?: string;
+  accept: Accept;
 }
 
-export const FileInput = ({ children, className }: FileInputProps) => {
-  const [file, setFile] = React.useState<File | null>(null);
+export const FileInput = ({
+  children,
+  name,
+  className,
+  accept,
+  ...rest
+}: FileInputProps) => {
+  const { register, unregister, setValue, watch, resetField } =
+    useFormContext();
 
-  const onDrop = React.useCallback((acceptedFiles: File[]) => {
-    setFile(acceptedFiles[0]);
-  }, []);
+  const files: File[] = watch(name);
+
+  const onDrop = React.useCallback(
+    (acceptedFiles: File[]) => {
+      setValue(name, acceptedFiles, { shouldValidate: true });
+    },
+    [setValue, name]
+  );
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop,
-    accept: { 'image/jpeg': ['.jpeg'], 'image/png': ['.png'] },
+    accept,
+    maxFiles: 1,
   });
 
   const handleRemoveFile = React.useCallback(() => {
-    setFile(null);
-  }, []);
+    resetField('image');
+  }, [resetField]);
 
-  if (file) {
-    return <FileInputPreview file={file} removeFile={handleRemoveFile} />;
+  React.useEffect(() => {
+    register(name);
+
+    return () => unregister(name);
+  }, [register, unregister, name]);
+
+  if (files?.length) {
+    return <FileInputPreview file={files[0]} removeFile={handleRemoveFile} />;
   }
 
   return (
@@ -76,7 +98,7 @@ export const FileInput = ({ children, className }: FileInputProps) => {
         </div>
       </label>
 
-      <input className="hidden" {...getInputProps} />
+      <input className="hidden" {...rest} {...getInputProps} />
     </div>
   );
 };

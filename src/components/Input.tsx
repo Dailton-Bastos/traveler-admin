@@ -20,6 +20,7 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
         <input
           id={id}
           ref={ref}
+          disabled={disabled}
           className="
             rounded-lg
             bg-gray-50
@@ -30,6 +31,7 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
             font-roboto
             focus:outline-none
             w-full
+            disabled:cursor-not-allowed
           "
           {...props}
         />
