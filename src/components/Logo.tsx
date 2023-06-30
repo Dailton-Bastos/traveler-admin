@@ -1,8 +1,22 @@
 import React from 'react';
+import { twMerge } from 'tailwind-merge';
 
-export const Logo = () => {
+interface Props {
+  className?: string;
+}
+
+export const Logo = ({ className }: Props) => {
   return (
-    <div className="flex justify-center items-center">
+    <div
+      className={twMerge(
+        `
+        flex
+        justify-center
+        items-center
+      `,
+        className
+      )}
+    >
       <svg
         width="22"
         height="48"

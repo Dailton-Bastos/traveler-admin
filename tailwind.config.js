@@ -21,6 +21,22 @@ module.exports = {
         'white-alpha-700': 'rgba(var(--white-alpha-700), 0.70)',
         'white-alpha-50': 'rgba(var(--white-alpha-50), 0.00)',
       },
+      keyframes: {
+        float: {
+          '0%': {
+            transform: 'translatey(0)',
+          },
+          '50%': {
+            transform: 'translatey(-20px)',
+          },
+          '100%': {
+            transform: 'translatey(0)',
+          },
+        },
+      },
+      animation: {
+        float: 'float 6s ease-in-out infinite',
+      },
     },
   },
   plugins: [],
