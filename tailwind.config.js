@@ -17,6 +17,7 @@ module.exports = {
         'blue-900': '#123952',
         'green-500': '#51B853',
         'gray-50': '#F5F8FA',
+        'gray-200': '#A0ACB2',
         'gray-500': '#617480',
         'white-alpha-700': 'rgba(var(--white-alpha-700), 0.70)',
         'white-alpha-50': 'rgba(var(--white-alpha-50), 0.00)',

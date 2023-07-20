@@ -8,27 +8,17 @@ import { EmptyCategory } from '~/components/EmptyCategory';
 const Categories = async () => {
   const categories = await getCategories();
 
+  const [category1, category2, category3] = categories;
+
   return (
     <>
       <HeaderCategory totalCategories={categories?.length} />
 
       <section className="w-full max-w-[1120px] mx-auto py-12">
         <div className="grid grid-cols-3 gap-x-8">
-          {categories[0] ? (
-            <Category category={categories[0]} />
-          ) : (
-            <EmptyCategory />
-          )}
-          {categories[1] ? (
-            <Category category={categories[1]} />
-          ) : (
-            <EmptyCategory />
-          )}
-          {categories[2] ? (
-            <Category category={categories[2]} />
-          ) : (
-            <EmptyCategory />
-          )}
+          {category1 ? <Category category={category1} /> : <EmptyCategory />}
+          {category2 ? <Category category={category2} /> : <EmptyCategory />}
+          {category3 ? <Category category={category3} /> : <EmptyCategory />}
         </div>
       </section>
     </>

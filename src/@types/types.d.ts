@@ -10,3 +10,9 @@ export interface Category {
   name: string;
   image_path: string;
 }
+
+export interface ModalStore {
+  isOpen: boolean;
+  onOpen: () => void;
+  onClose: () => void;
+}
