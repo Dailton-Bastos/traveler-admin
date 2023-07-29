@@ -2,12 +2,12 @@ import React from 'react';
 import { FiPlus } from 'react-icons/fi';
 
 import { Button } from '~/components/Button';
-import { Header } from '~/components/Header';
+import { HeaderContainer } from '~/components/HeaderContainer';
 
 const Cities = () => {
   return (
     <>
-      <Header>
+      <HeaderContainer>
         <div className="flex items-center justify-between">
           <h1 className="text-4xl font-semibold font-barlow text-blue-900">
             Cidades
@@ -20,7 +20,7 @@ const Cities = () => {
             </div>
           </Button>
         </div>
-      </Header>
+      </HeaderContainer>
       <div>Cities</div>
     </>
   );

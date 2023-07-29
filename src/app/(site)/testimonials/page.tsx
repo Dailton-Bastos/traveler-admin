@@ -1,10 +1,10 @@
 import React from 'react';
-import { Header } from '~/components/Header';
+import { HeaderContainer } from '~/components/HeaderContainer';
 
 const Testimonials = () => {
   return (
     <>
-      <Header>Comentários</Header>
+      <HeaderContainer>Comentários</HeaderContainer>
       <div>Testimonials</div>
     </>
   );

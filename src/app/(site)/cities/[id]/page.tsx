@@ -1,10 +1,10 @@
 import React from 'react';
-import { Header } from '~/components/Header';
+import { HeaderContainer } from '~/components/HeaderContainer';
 
 const Profile = () => {
   return (
     <>
-      <Header>Profile</Header>
+      <HeaderContainer>Profile</HeaderContainer>
       <div>City Profile</div>
     </>
   );

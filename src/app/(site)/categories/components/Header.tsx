@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { Header } from '~/components/Header';
+import { HeaderContainer } from '~/components/HeaderContainer';
 import { FiPlus, FiAlertCircle } from 'react-icons/fi';
 
 import { useRouter } from 'next/navigation';
@@ -18,7 +18,7 @@ export const HeaderCategory = ({ totalCategories }: HeaderCategoryProps) => {
   const disabled = totalCategories >= 3;
 
   return (
-    <Header>
+    <HeaderContainer>
       <div className="flex items-center justify-between">
         <h1 className="text-4xl font-semibold font-barlow text-blue-900">
           Categorias
@@ -42,6 +42,6 @@ export const HeaderCategory = ({ totalCategories }: HeaderCategoryProps) => {
           </div>
         </Button>
       </div>
-    </Header>
+    </HeaderContainer>
   );
 };

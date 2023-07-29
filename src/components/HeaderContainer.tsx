@@ -4,7 +4,7 @@ interface HeaderProps {
   children: React.ReactNode;
 }
 
-export const Header = ({ children }: HeaderProps) => {
+export const HeaderContainer = ({ children }: HeaderProps) => {
   return (
     <div
       className="
