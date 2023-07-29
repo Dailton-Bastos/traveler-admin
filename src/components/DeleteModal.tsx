@@ -2,19 +2,24 @@
 
 import React from 'react';
 import { Modal } from './Modal';
+import { RotatingLines } from 'react-loader-spinner';
 
 interface DeleteModalProps {
   title: string;
   description: string;
   isOpen: boolean;
+  isLoading?: boolean;
   onClose: () => void;
+  handleConfirm: () => void;
 }
 
 export const DeleteModal = ({
   title,
   description,
   isOpen,
+  isLoading,
   onClose,
+  handleConfirm,
 }: DeleteModalProps) => {
   const handleChange = React.useCallback(
     (open: boolean) => {
@@ -92,7 +97,10 @@ export const DeleteModal = ({
               h-[48px]
               hover:bg-orange-700
               transition
+              disabled:opacity-50
+              disabled:cursor-not-allowed
             "
+              disabled={isLoading}
               onClick={() => onClose()}
             >
               Não
@@ -104,6 +112,7 @@ export const DeleteModal = ({
               flex
               items-center
               justify-center
+              gap-4
               rounded-lg
               bg-green-500
               text-white
@@ -112,10 +121,23 @@ export const DeleteModal = ({
               h-[48px]
               hover:bg-green-600
               transition
+              disabled:opacity-50
+              disabled:cursor-not-allowed
             "
-              // onClick={handleConfirm}
+              disabled={isLoading}
+              onClick={handleConfirm}
             >
-              Sim
+              {isLoading ? (
+                <RotatingLines
+                  strokeColor="#fff"
+                  strokeWidth="3"
+                  animationDuration="0.95"
+                  width="30"
+                  visible={isLoading}
+                />
+              ) : (
+                'Sim'
+              )}
             </button>
           </div>
         </div>

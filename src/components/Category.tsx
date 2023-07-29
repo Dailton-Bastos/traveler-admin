@@ -1,10 +1,12 @@
 'use client';
 
 import React from 'react';
+import toast from 'react-hot-toast';
 import { FiTrash } from 'react-icons/fi';
 import { LuEdit3 } from 'react-icons/lu';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
+import { useSupabaseClient } from '@supabase/auth-helpers-react';
 
 import { Category as ICategory } from '~/@types/types';
 import { useLoadImage } from '~/hooks/useLoadImage';
@@ -16,14 +18,50 @@ interface CategoryProps {
 
 export const Category = ({ category }: CategoryProps) => {
   const [isOpen, setIsOpen] = React.useState(false);
+  const [isLoading, setIsLoading] = React.useState(false);
 
   const iconPath = useLoadImage(category);
-
+  const supabaseClient = useSupabaseClient();
   const router = useRouter();
 
   const onClose = React.useCallback(() => {
     setIsOpen(false);
   }, []);
+
+  const handleConfirm = React.useCallback(async () => {
+    setIsLoading(true);
+
+    const { error } = await supabaseClient
+      .from('categories')
+      .delete()
+      .eq('id', category?.id);
+
+    if (error) {
+      toast.error('Ocorreu um erro!');
+
+      setIsLoading(false);
+
+      return;
+    }
+
+    const { error: deleteFileError } = await supabaseClient.storage
+      .from('images')
+      .remove([`${category.image_path}`]);
+
+    if (deleteFileError) {
+      toast.error('Ocorreu um erro!');
+
+      setIsLoading(false);
+
+      return;
+    }
+
+    setIsLoading(false);
+
+    onClose();
+
+    router.refresh();
+  }, [category, supabaseClient, router, onClose]);
 
   return (
     <>
@@ -107,6 +145,8 @@ export const Category = ({ category }: CategoryProps) => {
         description={`Tem certeza que quer excluir a categoria ${category?.name} e seus 481 locais?`}
         isOpen={isOpen}
         onClose={onClose}
+        handleConfirm={handleConfirm}
+        isLoading={isLoading}
       />
     </>
   );

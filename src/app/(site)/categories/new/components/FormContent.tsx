@@ -78,7 +78,7 @@ export const FormContent = () => {
         const { data: iconData, error: iconError } =
           await supabaseClient.storage
             .from('images')
-            .upload(`icon-category-${uniqueID}`, iconFile, {
+            .upload(`categories/icon-category-${uniqueID}`, iconFile, {
               cacheControl: '3600',
               upsert: false,
             });
