@@ -19,6 +19,10 @@ import { FileInput } from '~/components/FileInput';
 import { SuccessModal } from '~/components/SuccessModal';
 import { useSuccessModal } from '~/hooks/useSuccessModal';
 
+interface Props {
+  totalCategories: number;
+}
+
 const MAX_FILE_SIZE = 500000;
 const ACCEPTED_IMAGE_TYPES = ['image/jpeg', 'image/jpg', 'image/png'];
 
@@ -44,8 +48,10 @@ const categoryFormValidationSchema = zod.object({
 
 type CategoryFormData = zod.infer<typeof categoryFormValidationSchema>;
 
-export const FormContent = () => {
+export const FormContent = ({ totalCategories }: Props) => {
   const [isLoading, setIsLoading] = React.useState(false);
+
+  const isDisabled = isLoading || totalCategories >= 3;
 
   const form = useForm<CategoryFormData>({
     resolver: zodResolver(categoryFormValidationSchema),
@@ -126,9 +132,9 @@ export const FormContent = () => {
     const timer = setTimeout(() => {
       if (successModal.isOpen) {
         successModal.onClose();
-        router.replace('/categories');
+        router.push('/categories');
       }
-    }, 3000);
+    }, 2000);
 
     return () => clearTimeout(timer);
   }, [successModal, router]);
@@ -177,7 +183,7 @@ export const FormContent = () => {
             <Input
               id="name"
               label="Nome da categoria"
-              disabled={isLoading}
+              disabled={isDisabled}
               error={errors?.name}
               {...register('name')}
             />
@@ -206,7 +212,7 @@ export const FormContent = () => {
             </p>
           </div>
 
-          <Button type="submit" disabled={isLoading}>
+          <Button type="submit" disabled={isDisabled}>
             <div
               className="
                 flex
