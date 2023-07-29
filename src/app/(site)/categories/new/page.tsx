@@ -1,11 +1,14 @@
-'use client';
-
 import React from 'react';
 
 import { FormContent } from './components/FormContent';
 import { HeaderNewCategory } from './components/Header';
+import { getCategories } from '~/actions/getCategories';
 
-const NewCategory = () => {
+const NewCategory = async () => {
+  const categories = await getCategories();
+
+  const totalCategories = categories?.length ?? 0;
+
   return (
     <>
       <HeaderNewCategory />
@@ -29,7 +32,7 @@ const NewCategory = () => {
             </h1>
           </div>
 
-          <FormContent />
+          <FormContent totalCategories={totalCategories} />
         </div>
       </section>
     </>
