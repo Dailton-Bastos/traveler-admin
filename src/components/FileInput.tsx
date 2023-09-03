@@ -49,7 +49,9 @@ export const FileInput = ({
   }, [register, unregister, name]);
 
   if (files?.length) {
-    return <FileInputPreview file={files[0]} removeFile={handleRemoveFile} />;
+    const url = URL.createObjectURL(files[0]);
+
+    return <FileInputPreview url={url} removeFile={handleRemoveFile} />;
   }
 
   return (

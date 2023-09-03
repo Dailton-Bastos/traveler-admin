@@ -90,7 +90,7 @@ export const Category = ({ category }: CategoryProps) => {
             border
             rounded-l-lg
           "
-            onClick={() => router.push(`/category/${category.id}`)}
+            onClick={() => router.push(`/categories/${category.id}`)}
           >
             <LuEdit3 size={20} color="#617480" />
           </button>

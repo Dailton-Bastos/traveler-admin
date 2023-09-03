@@ -110,6 +110,7 @@ export const FormContent = ({ totalCategories }: Props) => {
 
         setIsLoading(false);
         reset();
+        router.refresh();
         successModal.onOpen();
       } catch (error) {
         toast.error('Ocorreu um erro');
@@ -117,7 +118,7 @@ export const FormContent = ({ totalCategories }: Props) => {
         setIsLoading(false);
       }
     },
-    [supabaseClient, reset, successModal]
+    [supabaseClient, reset, successModal, router]
   );
 
   const accept = React.useMemo(

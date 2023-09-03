@@ -8,18 +8,16 @@ import Image from 'next/image';
 
 interface FileInputPreviewProps {
   className?: string;
-  file: File | null;
+  url: string | null;
   removeFile: () => void;
 }
 
 export const FileInputPreview = ({
   className,
-  file,
+  url,
   removeFile,
 }: FileInputPreviewProps) => {
-  if (!file) return null;
-
-  const url = URL.createObjectURL(file);
+  if (!url) return null;
 
   return (
     <div
@@ -48,6 +46,7 @@ export const FileInputPreview = ({
 
       <button
         onClick={removeFile}
+        type="button"
         className="
           flex
           items-center
