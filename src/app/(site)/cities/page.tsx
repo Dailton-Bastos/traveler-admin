@@ -1,8 +1,7 @@
 import React from 'react';
-import { FiPlus } from 'react-icons/fi';
 
-import { Button } from '~/components/Button';
 import { HeaderContainer } from '~/components/HeaderContainer';
+import { HeaderCities } from './components/Header';
 
 const Cities = () => {
   return (
@@ -13,12 +12,7 @@ const Cities = () => {
             Cidades
           </h1>
 
-          <Button>
-            <div className="flex items-center gap-x-1">
-              <FiPlus color="#fff" />
-              Adicionar um perfil
-            </div>
-          </Button>
+          <HeaderCities />
         </div>
       </HeaderContainer>
       <div>Cities</div>
