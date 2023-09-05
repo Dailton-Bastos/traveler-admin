@@ -1,14 +1,17 @@
 import React from 'react';
-import { FormHeader } from '../FormHeader';
+import type { FieldErrors } from 'react-hook-form';
+import { FiPlus } from 'react-icons/fi';
+import { UseFormRegister } from 'react-hook-form';
 import { twMerge } from 'tailwind-merge';
+
 import { Input } from '~/components/Input';
 import { FileInput } from '~/components/FileInput';
-import { FiPlus } from 'react-icons/fi';
 import { Button } from '~/components/Button';
 import { Alert } from '~/components/Alert';
-import { UseFormRegister } from 'react-hook-form';
-import type { FieldErrors } from 'react-hook-form';
+
+import { FormHeader } from '../FormHeader';
 import { CityFormData } from '../FormContent';
+import { TextEditor } from '~/components/Editor';
 
 type Props = {
   isDisabled: boolean;
@@ -17,7 +20,18 @@ type Props = {
 };
 
 export const NewCityForm = (props: Props) => {
+  const [description, setDescription] = React.useState('');
+
   const { isDisabled, errors, register } = props;
+
+  const handleEditorChange = React.useCallback(
+    (data: { html: string; text: string }) => {
+      const newValue = data?.text.replace(/\d/g, '');
+
+      setDescription(newValue);
+    },
+    []
+  );
 
   const accept = React.useMemo(
     () => ({
@@ -76,12 +90,11 @@ export const NewCityForm = (props: Props) => {
             )}
           </div>
 
-          <Input
-            id="name"
-            label="Nome da categoria"
-            disabled={isDisabled}
-            error={errors?.name}
-            {...register('name')}
+          <TextEditor
+            label="Descrição da cidade"
+            maxlength={420}
+            value={description}
+            onChange={handleEditorChange}
           />
         </div>
 
