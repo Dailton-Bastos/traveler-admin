@@ -1,5 +1,5 @@
 import React from 'react';
-
+import { RotatingLines } from 'react-loader-spinner';
 import dynamic from 'next/dynamic';
 import MarkdownIt from 'markdown-it';
 import 'react-markdown-editor-lite/lib/index.css';
@@ -58,12 +58,14 @@ export const TextEditor = ({
     <div className="w-full">
       <span className="text-gray-500 text-sm mb-2 block">{label}</span>
 
-      <MdEditor
-        {...props}
-        value={truncateValue}
-        className="h-[360px] rounded-lg overflow-hidden"
-        renderHTML={(text) => mdParser.render(text)}
-      />
+      <React.Suspense fallback={<RotatingLines />}>
+        <MdEditor
+          {...props}
+          value={truncateValue}
+          className="h-[360px] rounded-lg overflow-hidden"
+          renderHTML={(text) => mdParser.render(text)}
+        />
+      </React.Suspense>
 
       <span className="text-[#A0ACB2] text-xs mt-2 block text-right">
         {value?.length} / de {maxlength} caracteres

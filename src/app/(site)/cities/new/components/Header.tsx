@@ -3,12 +3,13 @@
 import React from 'react';
 import { BiLeftArrowAlt } from 'react-icons/bi';
 import { useRouter } from 'next/navigation';
-
-import { HeaderContainer } from '~/components/HeaderContainer';
 import { twMerge } from 'tailwind-merge';
 
+import { HeaderContainer } from '~/components/HeaderContainer';
+import { useCityStore } from '~/stores/useCityStore';
+
 export const HeaderNewCity = () => {
-  const [currentStep, setCurrentStep] = React.useState('01');
+  const currentStep = useCityStore((state) => state.currentStep);
 
   const router = useRouter();
 

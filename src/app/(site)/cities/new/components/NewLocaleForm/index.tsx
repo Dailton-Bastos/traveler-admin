@@ -10,11 +10,11 @@ import { Input } from '~/components/Input';
 import { FileInput } from '~/components/FileInput';
 import { Button } from '~/components/Button';
 import { Alert } from '~/components/Alert';
-import { useCityStore } from '~/stores/useCityStore';
 
 import { FormHeader } from '../FormHeader';
 import { CityFormData } from '../FormContent';
 import { TextEditor } from '~/components/Editor';
+import { useCityStore } from '~/stores/useCityStore';
 
 type Props = {
   isDisabled: boolean;
@@ -22,12 +22,12 @@ type Props = {
   register: UseFormRegister<CityFormData>;
 };
 
-export const NewCityForm = (props: Props) => {
+export const NewLocaleForm = (props: Props) => {
   const [description, setDescription] = React.useState('');
 
   const { isDisabled, errors, register } = props;
 
-  const goToNextStep = useCityStore((state) => state.setCurrentStep);
+  const goToPreviousStep = useCityStore((state) => state.setCurrentStep);
 
   const handleEditorChange = React.useCallback(
     (data: { html: string; text: string }) => {
@@ -56,26 +56,26 @@ export const NewCityForm = (props: Props) => {
 
   return (
     <div className="w-full">
-      <FormHeader currentStep="01" title="Adicione uma cidade" />
+      <FormHeader currentStep="02" title="Adicione um local" />
 
       <div className="py-12 px-16">
         <div className="border-b pb-4">
           <h2 className="text-2xl text-blue-900 font-barlow font-medium">
-            Dados da cidade
+            Dados básicos
           </h2>
         </div>
 
         <div className="flex flex-col items-start pt-6 pb-12 gap-y-6">
           <Input
             id="name"
-            label="Nome da cidade"
+            label="Nome do local"
             disabled={isDisabled}
             error={errors?.name}
             {...register('name')}
           />
 
           <div className="w-full h-fit">
-            <span className="text-gray-500 text-sm">Foto da cidade</span>
+            <span className="text-gray-500 text-sm">Foto do local</span>
 
             <div
               className={twMerge(
@@ -104,8 +104,8 @@ export const NewCityForm = (props: Props) => {
           </div>
 
           <TextEditor
-            label="Descrição da cidade"
-            maxlength={420}
+            label="Descrição do local"
+            maxlength={320}
             value={description}
             onChange={handleEditorChange}
           />
@@ -114,13 +114,22 @@ export const NewCityForm = (props: Props) => {
         <div className="flex items-center justify-between">
           <Alert />
 
-          <Button
-            type="button"
-            className="bg-blue-500 font-semibold hover:bg-blue-900"
-            onClick={() => goToNextStep('02')}
-          >
-            Próximo
-          </Button>
+          <div className="flex items-center justify-center gap-2">
+            <Button
+              type="button"
+              className="bg-blue-500 font-semibold hover:bg-blue-900"
+              onClick={() => goToPreviousStep('01')}
+            >
+              Voltar
+            </Button>
+
+            <Button
+              type="submit"
+              className="bg-green-500 font-semibold hover:bg-green-600"
+            >
+              Concluir cadastro
+            </Button>
+          </div>
         </div>
       </div>
     </div>

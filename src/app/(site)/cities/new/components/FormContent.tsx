@@ -5,8 +5,10 @@ import { FormProvider, SubmitHandler, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as zod from 'zod';
 
-import { FormHeader } from './FormHeader';
+import { useCityStore } from '~/stores/useCityStore';
+
 import { NewCityForm } from './NewCityForm';
+import { NewLocaleForm } from './NewLocaleForm';
 
 const MAX_FILE_SIZE = 500000;
 const ACCEPTED_IMAGE_TYPES = ['image/jpeg', 'image/jpg', 'image/png'];
@@ -38,6 +40,8 @@ export const FormContent = () => {
 
   const isDisabled = isLoading;
 
+  const currentStep = useCityStore((state) => state.currentStep);
+
   const form = useForm<CityFormData>({
     resolver: zodResolver(cityFormValidationSchema),
     mode: 'onSubmit',
@@ -62,11 +66,19 @@ export const FormContent = () => {
     <div className="w-full">
       <form onSubmit={handleSubmit(onSubmit)}>
         <FormProvider {...form}>
-          <NewCityForm
-            isDisabled={isDisabled}
-            errors={errors}
-            register={register}
-          />
+          {currentStep === '01' ? (
+            <NewCityForm
+              isDisabled={isDisabled}
+              errors={errors}
+              register={register}
+            />
+          ) : (
+            <NewLocaleForm
+              isDisabled={isDisabled}
+              errors={errors}
+              register={register}
+            />
+          )}
         </FormProvider>
       </form>
     </div>
