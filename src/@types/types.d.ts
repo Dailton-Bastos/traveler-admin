@@ -1,3 +1,6 @@
+import * as zod from 'zod';
+import { cityFormValidationSchema } from '~/schemas/newCitySchema';
+
 export interface UserInfo {
   id: string;
   full_name?: string;
@@ -16,3 +19,5 @@ export interface ModalStore {
   onOpen: () => void;
   onClose: () => void;
 }
+
+export type CityFormData = zod.infer<typeof cityFormValidationSchema>;

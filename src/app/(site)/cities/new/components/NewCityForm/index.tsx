@@ -1,9 +1,9 @@
 'use client';
 
 import React from 'react';
-import type { FieldErrors } from 'react-hook-form';
 import { FiPlus } from 'react-icons/fi';
 import { UseFormRegister } from 'react-hook-form';
+import type { FieldErrors, UseFormSetValue } from 'react-hook-form';
 import { twMerge } from 'tailwind-merge';
 
 import { Input } from '~/components/Input';
@@ -13,19 +13,21 @@ import { Alert } from '~/components/Alert';
 import { useCityStore } from '~/stores/useCityStore';
 
 import { FormHeader } from '../FormHeader';
-import { CityFormData } from '../FormContent';
 import { TextEditor } from '~/components/Editor';
+import type { CityFormData } from '~/@types/types';
 
 type Props = {
   isDisabled: boolean;
   errors: FieldErrors<CityFormData>;
   register: UseFormRegister<CityFormData>;
+  className?: string;
+  setValue: UseFormSetValue<CityFormData>;
 };
 
 export const NewCityForm = (props: Props) => {
   const [description, setDescription] = React.useState('');
 
-  const { isDisabled, errors, register } = props;
+  const { isDisabled, errors, register, className, setValue } = props;
 
   const goToNextStep = useCityStore((state) => state.setCurrentStep);
 
@@ -34,9 +36,24 @@ export const NewCityForm = (props: Props) => {
       const newValue = data?.text.replace(/\d/g, '');
 
       setDescription(newValue);
+
+      setValue('cityDescription', newValue, {
+        shouldValidate: true,
+        shouldDirty: false,
+      });
     },
-    []
+    [setValue]
   );
+
+  const handleGoToNextStep = React.useCallback(() => {
+    goToNextStep('02');
+
+    window.scroll({
+      top: 0,
+      left: 0,
+      behavior: 'smooth',
+    });
+  }, [goToNextStep]);
 
   const accept = React.useMemo(
     () => ({
@@ -46,16 +63,8 @@ export const NewCityForm = (props: Props) => {
     []
   );
 
-  React.useEffect(() => {
-    window.scroll({
-      top: 0,
-      left: 0,
-      behavior: 'smooth',
-    });
-  }, []);
-
   return (
-    <div className="w-full">
+    <div className={twMerge(`w-full`, className)}>
       <FormHeader currentStep="01" title="Adicione uma cidade" />
 
       <div className="py-12 px-16">
@@ -70,8 +79,8 @@ export const NewCityForm = (props: Props) => {
             id="name"
             label="Nome da cidade"
             disabled={isDisabled}
-            error={errors?.name}
-            {...register('name')}
+            error={errors?.cityName}
+            {...register('cityName')}
           />
 
           <div className="w-full h-fit">
@@ -96,9 +105,9 @@ export const NewCityForm = (props: Props) => {
               </FileInput>
             </div>
 
-            {!!errors?.image && (
+            {!!errors?.cityImage && (
               <small className="text-orange-600 mt-2">
-                {errors?.image?.message?.toString()}
+                {errors?.cityImage?.message?.toString()}
               </small>
             )}
           </div>
@@ -109,6 +118,12 @@ export const NewCityForm = (props: Props) => {
             value={description}
             onChange={handleEditorChange}
           />
+
+          {!!errors?.cityDescription && (
+            <small className="text-orange-600 mt-2">
+              {errors?.cityDescription?.message?.toString()}
+            </small>
+          )}
         </div>
 
         <div className="flex items-center justify-between">
@@ -117,7 +132,7 @@ export const NewCityForm = (props: Props) => {
           <Button
             type="button"
             className="bg-blue-500 font-semibold hover:bg-blue-900"
-            onClick={() => goToNextStep('02')}
+            onClick={handleGoToNextStep}
           >
             Próximo
           </Button>
