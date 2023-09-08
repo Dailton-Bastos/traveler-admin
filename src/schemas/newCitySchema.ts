@@ -12,7 +12,7 @@ export const cityFormValidationSchema = zod.object({
 
   cityImage: zod
     .any()
-    .refine((files) => files?.length == 1, 'Ícone obrigatório')
+    .refine((files) => files?.length == 1, 'Imagem obrigatória')
     .refine(
       (files) => files?.[0]?.size <= MAX_FILE_SIZE,
       `Tamanho máximo de 5MB.`
@@ -24,7 +24,7 @@ export const cityFormValidationSchema = zod.object({
   cityDescription: zod
     .string({ required_error: 'Descrição obrigatória' })
     .nonempty({
-      message: 'Breve descrição',
+      message: 'Descrição obrigatória',
     }),
   localeName: zod
     .string({
@@ -46,7 +46,7 @@ export const cityFormValidationSchema = zod.object({
   localeDescription: zod
     .string({ required_error: 'Descrição obrigatória' })
     .nonempty({
-      message: 'Breve descrição',
+      message: 'Descrição obrigatória',
     }),
   category: zod.string({ required_error: 'Categoria obrigatória' }).nonempty({
     message: 'Selecione uma categoria',

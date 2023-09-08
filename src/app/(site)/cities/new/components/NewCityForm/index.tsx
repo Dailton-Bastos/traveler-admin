@@ -1,19 +1,18 @@
 'use client';
 
 import React from 'react';
-import { FiPlus } from 'react-icons/fi';
 import { UseFormRegister } from 'react-hook-form';
 import type { FieldErrors, UseFormSetValue } from 'react-hook-form';
 import { twMerge } from 'tailwind-merge';
 
-import { Input } from '~/components/Input';
-import { FileInput } from '~/components/FileInput';
 import { Button } from '~/components/Button';
 import { Alert } from '~/components/Alert';
 import { useCityStore } from '~/stores/useCityStore';
 
 import { FormHeader } from '../FormHeader';
-import { TextEditor } from '~/components/Editor';
+import { CityName } from './components/CityName';
+import { CityImage } from './components/CityImage';
+import { CityDescription } from './components/CityDescription';
 import type { CityFormData } from '~/@types/types';
 
 type Props = {
@@ -25,24 +24,28 @@ type Props = {
 };
 
 export const NewCityForm = (props: Props) => {
-  const [description, setDescription] = React.useState('');
-
   const { isDisabled, errors, register, className, setValue } = props;
 
   const goToNextStep = useCityStore((state) => state.setCurrentStep);
 
-  const handleEditorChange = React.useCallback(
-    (data: { html: string; text: string }) => {
-      const newValue = data?.text.replace(/\d/g, '');
+  const formsErrors = React.useMemo(
+    () => ({
+      name: {
+        hasError: Boolean(errors?.cityName),
+        message: errors?.cityName?.message?.toString() ?? '',
+      },
 
-      setDescription(newValue);
+      image: {
+        hasError: Boolean(errors?.cityImage),
+        message: errors?.cityImage?.message?.toString() ?? '',
+      },
 
-      setValue('cityDescription', newValue, {
-        shouldValidate: true,
-        shouldDirty: false,
-      });
-    },
-    [setValue]
+      description: {
+        hasError: Boolean(errors?.cityDescription),
+        message: errors?.cityDescription?.message?.toString() ?? '',
+      },
+    }),
+    [errors]
   );
 
   const handleGoToNextStep = React.useCallback(() => {
@@ -54,14 +57,6 @@ export const NewCityForm = (props: Props) => {
       behavior: 'smooth',
     });
   }, [goToNextStep]);
-
-  const accept = React.useMemo(
-    () => ({
-      'image/png': ['.png'],
-      'image/jpeg': ['.jpg', '.jpeg'],
-    }),
-    []
-  );
 
   return (
     <div className={twMerge(`w-full`, className)}>
@@ -75,55 +70,24 @@ export const NewCityForm = (props: Props) => {
         </div>
 
         <div className="flex flex-col items-start pt-6 pb-12 gap-y-6">
-          <Input
-            id="name"
-            label="Nome da cidade"
-            disabled={isDisabled}
-            error={errors?.cityName}
-            {...register('cityName')}
+          <CityName
+            register={register}
+            isDisabled={isDisabled}
+            hasError={formsErrors?.name?.hasError}
+            errorMessage={formsErrors?.name?.message}
           />
 
-          <div className="w-full h-fit">
-            <span className="text-gray-500 text-sm">Foto da cidade</span>
-
-            <div
-              className={twMerge(
-                `
-                  overflow-hidden
-                  mt-2
-              `,
-                isDisabled && 'cursor-not-allowed pointer-events-none'
-              )}
-            >
-              <FileInput
-                className="w-full h-[160px]"
-                accept={accept}
-                name="image"
-              >
-                <FiPlus size={14} color="#F25D27" />{' '}
-                <span className="text-orange-600">Adicionar uma foto</span>
-              </FileInput>
-            </div>
-
-            {!!errors?.cityImage && (
-              <small className="text-orange-600 mt-2">
-                {errors?.cityImage?.message?.toString()}
-              </small>
-            )}
-          </div>
-
-          <TextEditor
-            label="Descrição da cidade"
-            maxlength={420}
-            value={description}
-            onChange={handleEditorChange}
+          <CityImage
+            isDisabled={isDisabled}
+            hasError={formsErrors?.image?.hasError}
+            errorMessage={formsErrors?.image?.message}
           />
 
-          {!!errors?.cityDescription && (
-            <small className="text-orange-600 mt-2">
-              {errors?.cityDescription?.message?.toString()}
-            </small>
-          )}
+          <CityDescription
+            setValue={setValue}
+            hasError={formsErrors?.description?.hasError}
+            errorMessage={formsErrors?.description?.message}
+          />
         </div>
 
         <div className="flex items-center justify-between">
