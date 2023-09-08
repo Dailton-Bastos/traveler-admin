@@ -32,7 +32,11 @@ export const CityImage = ({ isDisabled, hasError, errorMessage }: Props) => {
           isDisabled && 'cursor-not-allowed pointer-events-none'
         )}
       >
-        <FileInput className="w-full h-[160px]" accept={accept} name="image">
+        <FileInput
+          className="w-full h-[160px]"
+          accept={accept}
+          name="cityImage"
+        >
           <FiPlus size={14} color="#F25D27" />{' '}
           <span className="text-orange-600">Adicionar uma foto</span>
         </FileInput>

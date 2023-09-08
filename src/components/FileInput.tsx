@@ -39,8 +39,8 @@ export const FileInput = ({
   });
 
   const handleRemoveFile = React.useCallback(() => {
-    resetField('image');
-  }, [resetField]);
+    resetField(name);
+  }, [resetField, name]);
 
   React.useEffect(() => {
     register(name);
