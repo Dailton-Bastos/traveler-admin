@@ -1,16 +1,14 @@
 'use client';
 
 import React from 'react';
-import type { FieldError } from 'react-hook-form';
 
 interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
-  error?: FieldError;
   label?: string;
   filled?: boolean;
 }
 
 export const Input = React.forwardRef<HTMLInputElement, InputProps>(
-  ({ error, filled, id, label, disabled, ...props }, ref) => {
+  ({ filled, id, label, disabled, ...props }, ref) => {
     return (
       <div className="flex flex-col w-full">
         <label htmlFor={id} className="text-gray-500 text-sm mb-2">
@@ -35,10 +33,6 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
           "
           {...props}
         />
-
-        {!!error && (
-          <small className="text-[#F25D27] mt-2">{error?.message}</small>
-        )}
       </div>
     );
   }

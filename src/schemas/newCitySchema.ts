@@ -34,7 +34,7 @@ export const cityFormValidationSchema = zod.object({
 
   localeImage: zod
     .any()
-    .refine((files) => files?.length == 1, 'Ícone obrigatório')
+    .refine((files) => files?.length == 1, 'Imagem obrigatória')
     .refine(
       (files) => files?.[0]?.size <= MAX_FILE_SIZE,
       `Tamanho máximo de 5MB.`

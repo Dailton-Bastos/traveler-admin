@@ -20,4 +20,35 @@ export interface ModalStore {
   onClose: () => void;
 }
 
+type HtmlType = string | React.ReactElement;
+
+export type MdEditorType = {
+  id?: string;
+  defaultValue?: string;
+  value?: string;
+  renderHTML?: (
+    text: string
+  ) => HtmlType | Promise<HtmlType> | (() => HtmlType);
+  style?: React.CSSProperties;
+  autoFocus?: boolean;
+  placeholder?: string;
+  readOnly?: boolean;
+  className?: string;
+  config?: any;
+  plugins?: string[];
+  onChange?: (
+    data: {
+      text: string;
+      html: string;
+    },
+    event?: React.ChangeEvent<HTMLTextAreaElement>
+  ) => void;
+  onFocus?: (e: React.FocusEvent<HTMLTextAreaElement>) => void;
+  onBlur?: (e: React.FocusEvent<HTMLTextAreaElement>) => void;
+  onScroll?: (
+    e: React.UIEvent<HTMLTextAreaElement | HTMLDivElement>,
+    type: 'md' | 'html'
+  ) => void;
+};
+
 export type CityFormData = zod.infer<typeof cityFormValidationSchema>;
