@@ -16,6 +16,7 @@ import { LocaleName } from './components/LocaleName';
 import { LocaleImage } from './components/LocaleImage';
 import { LocaleDescription } from './components/LocaleDescription';
 import { LocaleCategory } from './components/LocaleCategory';
+import { LocaleAddress } from './components/LocaleAddress';
 
 type Props = {
   isDisabled: boolean;
@@ -100,6 +101,12 @@ export const NewLocaleForm = (props: Props) => {
             setValue={setValue}
             hasError={formsErrors?.category?.hasError}
             errorMessage={formsErrors?.category?.message}
+          />
+
+          <LocaleAddress
+            register={register}
+            isDisabled={isDisabled}
+            errors={errors}
           />
         </div>
 

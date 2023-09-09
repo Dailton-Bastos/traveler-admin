@@ -1,4 +1,5 @@
 import * as zod from 'zod';
+import { isValidCEP } from '@brazilian-utils/brazilian-utils';
 
 const MAX_FILE_SIZE = 500000;
 const ACCEPTED_IMAGE_TYPES = ['image/jpeg', 'image/jpg', 'image/png'];
@@ -50,5 +51,29 @@ export const cityFormValidationSchema = zod.object({
     }),
   category: zod.string({ required_error: 'Categoria obrigatória' }).nonempty({
     message: 'Selecione uma categoria',
+  }),
+
+  address: zod.object({
+    zipCode: zod
+      .string({
+        required_error: 'CEP obrigatório',
+      })
+      .max(9, 'CEP inválido')
+      .refine((data) => isValidCEP(data), {
+        message: 'CEP inválido',
+      }),
+
+    street: zod.string({ required_error: 'Rua obrigatória' }).nonempty({
+      message: 'Rua obrigatória',
+    }),
+    neighborhood: zod
+      .string({ required_error: 'Bairro obrigatório' })
+      .nonempty({
+        message: 'Bairro obrigatório',
+      }),
+    number: zod.string({ required_error: 'Número obrigatório' }).nonempty({
+      message: 'Número obrigatório',
+    }),
+    complement: zod.string().optional(),
   }),
 });
