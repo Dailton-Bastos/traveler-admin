@@ -1,20 +1,33 @@
 import React from 'react';
+import toast from 'react-hot-toast';
+import { FieldErrors, UseFormRegister, UseFormSetValue } from 'react-hook-form';
 import uniqid from 'uniqid';
-import { FieldErrors, UseFormRegister } from 'react-hook-form';
+import cep from 'cep-promise';
+import { isValidCEP } from '@brazilian-utils/brazilian-utils';
 import { CityFormData } from '~/@types/types';
 import { ErrorMessage } from '~/components/ErrorMessage';
 import { Input } from '~/components/Input';
+import { useDebounce } from '~/hooks/useDebounce';
 
 type Props = {
   register: UseFormRegister<CityFormData>;
   isDisabled: boolean;
   errors: FieldErrors<CityFormData>;
+  setValue: UseFormSetValue<CityFormData>;
 };
 
-export const LocaleAddress = ({ register, isDisabled, errors }: Props) => {
+export const LocaleAddress = ({
+  register,
+  setValue,
+  isDisabled,
+  errors,
+}: Props) => {
   const [zipCode, setZipCode] = React.useState('');
+  const [disableInputs, setDisableInputs] = React.useState(true);
 
-  const disabled = isDisabled;
+  const debouncedValue = useDebounce<string>(zipCode, 1000);
+
+  const disabled = isDisabled || disableInputs;
 
   const formsErrors = React.useMemo(
     () => [
@@ -52,6 +65,41 @@ export const LocaleAddress = ({ register, isDisabled, errors }: Props) => {
     },
     []
   );
+
+  const fetchAddressByZipCode = React.useCallback(() => {
+    if (!isValidCEP(debouncedValue)) return;
+
+    const promise = cep(debouncedValue);
+
+    toast.promise(promise, {
+      loading: 'Procurando endereço...',
+      success: (data) => {
+        if (data) {
+          setValue('address.street', data?.street, {
+            shouldValidate: true,
+            shouldDirty: false,
+          });
+          setValue('address.neighborhood', data?.neighborhood, {
+            shouldValidate: true,
+            shouldDirty: false,
+          });
+        }
+
+        return 'Endereço encontrado';
+      },
+      error: (er) => er?.message,
+    });
+  }, [debouncedValue, setValue]);
+
+  React.useEffect(() => {
+    fetchAddressByZipCode();
+  }, [fetchAddressByZipCode]);
+
+  React.useEffect(() => {
+    if (debouncedValue) {
+      setDisableInputs(!isValidCEP(debouncedValue));
+    }
+  }, [debouncedValue]);
 
   return (
     <div className="w-full">

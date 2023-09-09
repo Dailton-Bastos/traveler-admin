@@ -105,6 +105,7 @@ export const NewLocaleForm = (props: Props) => {
 
           <LocaleAddress
             register={register}
+            setValue={setValue}
             isDisabled={isDisabled}
             errors={errors}
           />
