@@ -39,9 +39,9 @@ export const FileInputPreview = ({
       <Image
         src={url}
         alt=""
-        width={500}
-        height={500}
-        className="object-cover w-auto h-auto"
+        width={672}
+        height={202}
+        className="object-cover w-full h-full"
       />
 
       <button
