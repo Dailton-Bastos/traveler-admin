@@ -49,7 +49,7 @@ export const cityFormValidationSchema = zod.object({
     .nonempty({
       message: 'Descrição obrigatória',
     }),
-  category: zod.string({ required_error: 'Categoria obrigatória' }).nonempty({
+  categoryId: zod.string({ required_error: 'Categoria obrigatória' }).nonempty({
     message: 'Selecione uma categoria',
   }),
 

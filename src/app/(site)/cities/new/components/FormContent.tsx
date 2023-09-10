@@ -9,9 +9,13 @@ import { useCityStore } from '~/stores/useCityStore';
 import { NewCityForm } from './NewCityForm';
 import { NewLocaleForm } from './NewLocaleForm';
 import { cityFormValidationSchema } from '~/schemas/newCitySchema';
-import { CityFormData } from '~/@types/types';
+import type { Category, CityFormData } from '~/@types/types';
 
-export const FormContent = () => {
+type Props = {
+  categories: Category[];
+};
+
+export const FormContent = ({ categories = [] }: Props) => {
   const [isLoading, setIsLoading] = React.useState(false);
 
   const isDisabled = isLoading;
@@ -28,7 +32,7 @@ export const FormContent = () => {
       localeName: '',
       localeImage: null,
       localeDescription: '',
-      category: '',
+      categoryId: '',
     },
   });
 
@@ -61,6 +65,7 @@ export const FormContent = () => {
             register={register}
             className={currentStep === '01' ? 'hidden' : ''}
             setValue={setValue}
+            categories={categories}
           />
         </FormProvider>
       </form>

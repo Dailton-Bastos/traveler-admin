@@ -10,7 +10,7 @@ import { Alert } from '~/components/Alert';
 
 import { FormHeader } from '../FormHeader';
 import { useCityStore } from '~/stores/useCityStore';
-import type { CityFormData } from '~/@types/types';
+import type { Category, CityFormData } from '~/@types/types';
 
 import { LocaleName } from './components/LocaleName';
 import { LocaleImage } from './components/LocaleImage';
@@ -24,10 +24,12 @@ type Props = {
   register: UseFormRegister<CityFormData>;
   className?: string;
   setValue: UseFormSetValue<CityFormData>;
+  categories: Category[];
 };
 
 export const NewLocaleForm = (props: Props) => {
-  const { isDisabled, errors, register, className, setValue } = props;
+  const { isDisabled, errors, register, className, setValue, categories } =
+    props;
 
   const goToPreviousStep = useCityStore((state) => state.setCurrentStep);
 
@@ -49,8 +51,8 @@ export const NewLocaleForm = (props: Props) => {
       },
 
       category: {
-        hasError: Boolean(errors?.category),
-        message: errors?.category?.message?.toString() ?? '',
+        hasError: Boolean(errors?.categoryId),
+        message: errors?.categoryId?.message?.toString() ?? '',
       },
     }),
     [errors]
@@ -101,6 +103,7 @@ export const NewLocaleForm = (props: Props) => {
             setValue={setValue}
             hasError={formsErrors?.category?.hasError}
             errorMessage={formsErrors?.category?.message}
+            categories={categories}
           />
 
           <LocaleAddress

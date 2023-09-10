@@ -3,13 +3,18 @@
 import React from 'react';
 import Image from 'next/image';
 import { twMerge } from 'tailwind-merge';
+import type { Category } from '~/@types/types';
+import { useLoadImage } from '~/hooks/useLoadImage';
 
 type Props = React.InputHTMLAttributes<HTMLInputElement> & {
   label: string;
+  category: Category;
 };
 
 export const RadioButtonCategory = React.forwardRef<HTMLInputElement, Props>(
-  ({ className, id, label, checked, ...props }, ref) => {
+  ({ className, id, label, checked, category, ...props }, ref) => {
+    const iconPath = useLoadImage(category);
+
     return (
       <label
         htmlFor={id}
@@ -35,12 +40,9 @@ export const RadioButtonCategory = React.forwardRef<HTMLInputElement, Props>(
 
         <div className="divide-y">
           <div className="flex items-center justify-between px-6 py-6">
-            <Image
-              src="/_next/image?url=https%3A%2F%2Fnpglzlnebwpzswwxzeow.supabase.co%2Fstorage%2Fv1%2Fobject%2Fpublic%2Fimages%2Fcategories%2Ficon-category-lm2fknjb&w=96&q=75"
-              alt={label}
-              width={40}
-              height={40}
-            />
+            {iconPath && (
+              <Image src={iconPath} alt={label} width={40} height={40} />
+            )}
 
             <div
               className={twMerge(
