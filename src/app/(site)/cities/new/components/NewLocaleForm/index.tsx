@@ -77,7 +77,7 @@ export const NewLocaleForm = (props: Props) => {
           </h2>
         </div>
 
-        <div className="flex flex-col items-start pt-6 pb-12 gap-y-6">
+        <div className="flex flex-col items-start pt-6 gap-y-6">
           <LocaleName
             register={register}
             isDisabled={isDisabled}

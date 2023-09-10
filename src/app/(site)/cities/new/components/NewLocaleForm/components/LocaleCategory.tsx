@@ -28,7 +28,7 @@ export const LocaleCategory = ({ hasError, errorMessage, setValue }: Props) => {
   );
 
   return (
-    <div className="w-full">
+    <div className="w-full pt-4">
       <span className="text-gray-500 text-sm mb-2 block">
         Selecione uma categoria
       </span>
