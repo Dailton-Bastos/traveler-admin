@@ -19,11 +19,11 @@ export const CityDescription = ({
 
   const handleEditorChange = React.useCallback(
     (data: { html: string; text: string }) => {
-      const newValue = data?.text.replace(/\d/g, '');
+      const { text } = data;
 
-      setDescription(newValue);
+      setDescription(text);
 
-      setValue('cityDescription', newValue, {
+      setValue('cityDescription', text, {
         shouldValidate: true,
         shouldDirty: false,
       });
@@ -34,6 +34,7 @@ export const CityDescription = ({
   return (
     <div className="w-full">
       <TextEditor
+        id="city"
         label="Descrição da cidade"
         maxlength={420}
         value={description}

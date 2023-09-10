@@ -19,11 +19,11 @@ export const LocaleDescription = ({
 
   const handleEditorChange = React.useCallback(
     (data: { html: string; text: string }) => {
-      const newValue = data?.text.replace(/\d/g, '');
+      const { text } = data;
 
-      setDescription(newValue);
+      setDescription(text);
 
-      setValue('localeDescription', newValue, {
+      setValue('localeDescription', text, {
         shouldValidate: true,
         shouldDirty: false,
       });
@@ -34,6 +34,7 @@ export const LocaleDescription = ({
   return (
     <div className="w-full">
       <TextEditor
+        id="locale"
         label="Descrição do local"
         maxlength={320}
         value={description}
