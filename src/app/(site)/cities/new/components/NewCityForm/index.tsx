@@ -14,6 +14,7 @@ import { CityName } from './components/CityName';
 import { CityImage } from './components/CityImage';
 import { CityDescription } from './components/CityDescription';
 import type { CityFormData } from '~/@types/types';
+import toast from 'react-hot-toast';
 
 type Props = {
   isDisabled: boolean;
@@ -21,10 +22,18 @@ type Props = {
   register: UseFormRegister<CityFormData>;
   className?: string;
   setValue: UseFormSetValue<CityFormData>;
+  disableNextStepButton: boolean;
 };
 
 export const NewCityForm = (props: Props) => {
-  const { isDisabled, errors, register, className, setValue } = props;
+  const {
+    isDisabled,
+    errors,
+    register,
+    className,
+    setValue,
+    disableNextStepButton,
+  } = props;
 
   const goToNextStep = useCityStore((state) => state.setCurrentStep);
 
@@ -49,6 +58,10 @@ export const NewCityForm = (props: Props) => {
   );
 
   const handleGoToNextStep = React.useCallback(() => {
+    if (disableNextStepButton) {
+      return toast.error('Preencha os campos acima');
+    }
+
     goToNextStep('02');
 
     window.scroll({
@@ -56,7 +69,7 @@ export const NewCityForm = (props: Props) => {
       left: 0,
       behavior: 'smooth',
     });
-  }, [goToNextStep]);
+  }, [goToNextStep, disableNextStepButton]);
 
   return (
     <div className={twMerge(`w-full`, className)}>

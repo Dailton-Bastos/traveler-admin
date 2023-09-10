@@ -36,9 +36,20 @@ export const FormContent = ({ categories = [] }: Props) => {
     },
   });
 
-  const { register, formState, handleSubmit, setValue } = form;
+  const { register, formState, handleSubmit, setValue, getValues, setError } =
+    form;
 
   const { errors } = formState;
+
+  const cityValues = getValues(['cityName', 'cityDescription', 'cityImage']);
+
+  const disableNextStepButton = cityValues?.some((value) => {
+    if (typeof value === 'string') {
+      return !value?.trim() === true;
+    }
+
+    return !value === true;
+  });
 
   const onSubmit: SubmitHandler<CityFormData> = React.useCallback(
     async (data) => {
@@ -57,6 +68,7 @@ export const FormContent = ({ categories = [] }: Props) => {
             register={register}
             className={currentStep === '02' ? 'hidden' : ''}
             setValue={setValue}
+            disableNextStepButton={disableNextStepButton}
           />
 
           <NewLocaleForm
