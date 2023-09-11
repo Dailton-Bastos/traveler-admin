@@ -1,8 +1,8 @@
 'use client';
 
 import React from 'react';
-import { UseFormRegister } from 'react-hook-form';
-import type { FieldErrors, UseFormSetValue } from 'react-hook-form';
+import { useFormContext } from 'react-hook-form';
+import toast from 'react-hot-toast';
 import { twMerge } from 'tailwind-merge';
 
 import { Button } from '~/components/Button';
@@ -13,49 +13,28 @@ import { FormHeader } from '../FormHeader';
 import { CityName } from './components/CityName';
 import { CityImage } from './components/CityImage';
 import { CityDescription } from './components/CityDescription';
-import type { CityFormData } from '~/@types/types';
-import toast from 'react-hot-toast';
+import { CityFormData } from '~/@types/types';
 
 type Props = {
-  isDisabled: boolean;
-  errors: FieldErrors<CityFormData>;
-  register: UseFormRegister<CityFormData>;
   className?: string;
-  setValue: UseFormSetValue<CityFormData>;
-  disableNextStepButton: boolean;
 };
 
 export const NewCityForm = (props: Props) => {
-  const {
-    isDisabled,
-    errors,
-    register,
-    className,
-    setValue,
-    disableNextStepButton,
-  } = props;
+  const { className } = props;
+
+  const { getValues } = useFormContext<CityFormData>();
+
+  const cityValues = getValues(['cityName', 'cityDescription', 'cityImage']);
+
+  const disableNextStepButton = cityValues?.some((value) => {
+    if (typeof value === 'string') {
+      return !value?.trim() === true;
+    }
+
+    return !value === true;
+  });
 
   const goToNextStep = useCityStore((state) => state.setCurrentStep);
-
-  const formsErrors = React.useMemo(
-    () => ({
-      name: {
-        hasError: Boolean(errors?.cityName),
-        message: errors?.cityName?.message?.toString() ?? '',
-      },
-
-      image: {
-        hasError: Boolean(errors?.cityImage),
-        message: errors?.cityImage?.message?.toString() ?? '',
-      },
-
-      description: {
-        hasError: Boolean(errors?.cityDescription),
-        message: errors?.cityDescription?.message?.toString() ?? '',
-      },
-    }),
-    [errors]
-  );
 
   const handleGoToNextStep = React.useCallback(() => {
     if (disableNextStepButton) {
@@ -83,24 +62,11 @@ export const NewCityForm = (props: Props) => {
         </div>
 
         <div className="flex flex-col items-start pt-6 pb-12 gap-y-6">
-          <CityName
-            register={register}
-            isDisabled={isDisabled}
-            hasError={formsErrors?.name?.hasError}
-            errorMessage={formsErrors?.name?.message}
-          />
+          <CityName />
 
-          <CityImage
-            isDisabled={isDisabled}
-            hasError={formsErrors?.image?.hasError}
-            errorMessage={formsErrors?.image?.message}
-          />
+          <CityImage />
 
-          <CityDescription
-            setValue={setValue}
-            hasError={formsErrors?.description?.hasError}
-            errorMessage={formsErrors?.description?.message}
-          />
+          <CityDescription />
         </div>
 
         <div className="flex items-center justify-between">

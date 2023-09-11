@@ -1,21 +1,22 @@
 import React from 'react';
-import { UseFormSetValue } from 'react-hook-form';
+import { useFormContext } from 'react-hook-form';
+
 import { TextEditor } from '~/components/Editor';
 import { ErrorMessage } from '~/components/ErrorMessage';
+import { useInputsErrors } from '~/hooks/useInputsErrors';
 import type { CityFormData } from '~/@types/types';
 
-type Props = {
-  hasError: boolean;
-  errorMessage: string;
-  setValue: UseFormSetValue<CityFormData>;
-};
-
-export const CityDescription = ({
-  setValue,
-  hasError,
-  errorMessage,
-}: Props) => {
+export const CityDescription = () => {
   const [description, setDescription] = React.useState('');
+
+  const { setValue, formState } = useFormContext<CityFormData>();
+
+  const { isSubmitting, errors } = formState;
+
+  const { hasError, message } = useInputsErrors<CityFormData>(
+    errors,
+    'cityDescription'
+  );
 
   const handleEditorChange = React.useCallback(
     (data: { html: string; text: string }) => {
@@ -38,10 +39,11 @@ export const CityDescription = ({
         label="Descrição da cidade"
         maxlength={420}
         value={description}
+        readOnly={isSubmitting}
         onChange={handleEditorChange}
       />
 
-      {hasError && <ErrorMessage message={errorMessage} />}
+      {hasError && <ErrorMessage message={message} />}
     </div>
   );
 };

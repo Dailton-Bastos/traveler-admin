@@ -36,19 +36,9 @@ export const FormContent = ({ categories = [] }: Props) => {
     },
   });
 
-  const { register, formState, handleSubmit, setValue, getValues } = form;
+  const { register, formState, handleSubmit, setValue } = form;
 
   const { errors } = formState;
-
-  const cityValues = getValues(['cityName', 'cityDescription', 'cityImage']);
-
-  const disableNextStepButton = cityValues?.some((value) => {
-    if (typeof value === 'string') {
-      return !value?.trim() === true;
-    }
-
-    return !value === true;
-  });
 
   const onSubmit: SubmitHandler<CityFormData> = React.useCallback(
     async (data) => {
@@ -59,16 +49,9 @@ export const FormContent = ({ categories = [] }: Props) => {
 
   return (
     <div className="w-full">
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <FormProvider {...form}>
-          <NewCityForm
-            isDisabled={isDisabled}
-            errors={errors}
-            register={register}
-            className={currentStep === '02' ? 'hidden' : ''}
-            setValue={setValue}
-            disableNextStepButton={disableNextStepButton}
-          />
+      <FormProvider {...form}>
+        <form onSubmit={handleSubmit(onSubmit)}>
+          <NewCityForm className={currentStep === '02' ? 'hidden' : ''} />
 
           <NewLocaleForm
             isDisabled={isDisabled}
@@ -78,8 +61,8 @@ export const FormContent = ({ categories = [] }: Props) => {
             setValue={setValue}
             categories={categories}
           />
-        </FormProvider>
-      </form>
+        </form>
+      </FormProvider>
     </div>
   );
 };
