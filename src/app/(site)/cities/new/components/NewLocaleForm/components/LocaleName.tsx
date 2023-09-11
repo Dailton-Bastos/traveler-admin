@@ -23,6 +23,7 @@ export const LocaleName = ({
         id="name"
         label="Nome do local"
         disabled={isDisabled}
+        hasError={hasError}
         {...register('localeName')}
       />
 

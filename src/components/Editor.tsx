@@ -14,12 +14,14 @@ const mdParser = new MarkdownIt();
 type Props = MdEditorType & {
   label?: string;
   maxlength?: number;
+  hasError?: boolean;
 };
 
 export const TextEditor = ({
   label,
   maxlength = 320,
   value,
+  hasError,
   ...props
 }: Props) => {
   const truncateValue = value?.slice(0, maxlength);
@@ -33,6 +35,9 @@ export const TextEditor = ({
           {...props}
           value={truncateValue}
           className="h-[360px] rounded-lg overflow-hidden"
+          style={{
+            borderColor: hasError ? '#F25D27' : '#E0E0E0',
+          }}
           renderHTML={(text) => mdParser.render(text)}
         />
       </React.Suspense>

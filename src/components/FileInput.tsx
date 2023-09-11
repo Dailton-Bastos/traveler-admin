@@ -11,6 +11,7 @@ interface FileInputProps {
   name: string;
   className?: string;
   accept: Accept;
+  hasError?: boolean;
 }
 
 export const FileInput = ({
@@ -18,6 +19,7 @@ export const FileInput = ({
   name,
   className,
   accept,
+  hasError,
   ...rest
 }: FileInputProps) => {
   const { register, unregister, setValue, watch, resetField } =
@@ -62,13 +64,13 @@ export const FileInput = ({
         bg-gray-50
         border-2
         border-dashed
-        border-[#DCE2E5]
         min-h-[120px]
         min-w-[120px]
         hover:border-gray-300
         transition
       `,
         isDragActive && 'border-gray-300',
+        hasError && 'animate-shake border-orange-600',
         className
       )}
       {...getRootProps()}

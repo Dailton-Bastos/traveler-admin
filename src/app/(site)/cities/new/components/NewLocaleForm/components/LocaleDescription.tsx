@@ -39,6 +39,7 @@ export const LocaleDescription = ({
         maxlength={320}
         value={description}
         onChange={handleEditorChange}
+        hasError={hasError}
       />
 
       {hasError && <ErrorMessage message={errorMessage} />}

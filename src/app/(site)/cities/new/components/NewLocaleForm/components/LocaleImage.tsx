@@ -36,6 +36,7 @@ export const LocaleImage = ({ isDisabled, hasError, errorMessage }: Props) => {
           className="w-full h-[160px]"
           accept={accept}
           name="localeImage"
+          hasError={hasError}
         >
           <FiPlus size={14} color="#F25D27" />{' '}
           <span className="text-orange-600">Adicionar uma foto</span>

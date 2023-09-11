@@ -36,8 +36,7 @@ export const FormContent = ({ categories = [] }: Props) => {
     },
   });
 
-  const { register, formState, handleSubmit, setValue, getValues, setError } =
-    form;
+  const { register, formState, handleSubmit, setValue, getValues } = form;
 
   const { errors } = formState;
 
