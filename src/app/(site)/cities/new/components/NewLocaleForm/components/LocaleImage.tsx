@@ -11,12 +11,12 @@ import type { CityFormData } from '~/@types/types';
 export const LocaleImage = () => {
   const { formState } = useFormContext<CityFormData>();
 
-  const { isSubmitting, errors } = formState;
+  const {
+    isSubmitting,
+    errors: { localeImage },
+  } = formState;
 
-  const { hasError, message } = useInputsErrors<CityFormData>(
-    errors,
-    'localeImage'
-  );
+  const { hasError, message } = useInputsErrors(localeImage);
 
   const accept = React.useMemo(
     () => ({

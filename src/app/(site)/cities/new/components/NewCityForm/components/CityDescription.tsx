@@ -11,12 +11,12 @@ export const CityDescription = () => {
 
   const { setValue, formState } = useFormContext<CityFormData>();
 
-  const { isSubmitting, errors } = formState;
+  const {
+    isSubmitting,
+    errors: { cityDescription },
+  } = formState;
 
-  const { hasError, message } = useInputsErrors<CityFormData>(
-    errors,
-    'cityDescription'
-  );
+  const { hasError, message } = useInputsErrors(cityDescription);
 
   const handleEditorChange = React.useCallback(
     (data: { html: string; text: string }) => {

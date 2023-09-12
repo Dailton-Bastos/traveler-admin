@@ -1,16 +1,18 @@
 import React from 'react';
-import { FieldErrors, FieldValues, FieldError } from 'react-hook-form';
+import { FieldError, FieldErrorsImpl, Merge } from 'react-hook-form';
 
-export function useInputsErrors<T extends FieldValues>(
-  errors: FieldErrors<T>,
-  field: string
-) {
+type FieldErrorType =
+  | FieldError
+  | Merge<FieldError, FieldErrorsImpl<any>>
+  | undefined;
+
+export function useInputsErrors(fieldError: FieldErrorType) {
   const { hasError, message } = React.useMemo(
     () => ({
-      hasError: Boolean(errors?.[field]),
-      message: errors?.[field]?.message?.toString() ?? '',
+      hasError: Boolean(fieldError?.message),
+      message: fieldError?.message?.toString() ?? '',
     }),
-    [errors, field]
+    [fieldError]
   );
 
   return { hasError, message };

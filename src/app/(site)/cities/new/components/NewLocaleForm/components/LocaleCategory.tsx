@@ -16,10 +16,9 @@ export const LocaleCategory = ({ categories }: Props) => {
 
   const { isSubmitting, errors } = formState;
 
-  const { hasError, message } = useInputsErrors<CityFormData>(
-    errors,
-    'categoryId'
-  );
+  const { categoryId: categoryErrors } = errors;
+
+  const { hasError, message } = useInputsErrors(categoryErrors);
 
   const handleChangeCategory = React.useCallback(
     (id: string): void => {

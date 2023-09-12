@@ -9,12 +9,12 @@ import type { CityFormData } from '~/@types/types';
 export const LocaleName = () => {
   const { register, formState } = useFormContext<CityFormData>();
 
-  const { isSubmitting, errors } = formState;
+  const {
+    isSubmitting,
+    errors: { localeName },
+  } = formState;
 
-  const { hasError, message } = useInputsErrors<CityFormData>(
-    errors,
-    'localeName'
-  );
+  const { hasError, message } = useInputsErrors(localeName);
 
   return (
     <div className="w-full">

@@ -11,12 +11,12 @@ export const LocaleDescription = () => {
 
   const { setValue, formState } = useFormContext<CityFormData>();
 
-  const { isSubmitting, errors } = formState;
+  const {
+    isSubmitting,
+    errors: { localeDescription },
+  } = formState;
 
-  const { hasError, message } = useInputsErrors<CityFormData>(
-    errors,
-    'localeDescription'
-  );
+  const { hasError, message } = useInputsErrors(localeDescription);
 
   const handleEditorChange = React.useCallback(
     (data: { html: string; text: string }) => {

@@ -6,10 +6,10 @@ import dynamic from 'next/dynamic';
 import cep from 'cep-promise';
 import { isValidCEP } from '@brazilian-utils/brazilian-utils';
 
-// import { ErrorMessage } from '~/components/ErrorMessage';
+import { ErrorMessage } from '~/components/ErrorMessage';
 import { Input } from '~/components/Input';
 import { useDebounce } from '~/hooks/useDebounce';
-// import { useInputsErrors } from '~/hooks/useInputsErrors';
+import { useInputsErrors } from '~/hooks/useInputsErrors';
 import type { CityFormData } from '~/@types/types';
 
 const Map = dynamic(() => import('~/components/Map'), {
@@ -31,9 +31,18 @@ export const LocaleAddress = () => {
 
   const debouncedValue = useDebounce<string>(zipCode, 1000);
 
-  const { register, formState, setValue } = useFormContext<CityFormData>();
+  const { register, formState, setValue, clearErrors } =
+    useFormContext<CityFormData>();
 
-  const { isSubmitting } = formState;
+  const {
+    isSubmitting,
+    errors: { address },
+  } = formState;
+
+  const postalCodeErrors = useInputsErrors(address?.zipCode);
+  const streetErrors = useInputsErrors(address?.street);
+  const neighborhoodErrors = useInputsErrors(address?.neighborhood);
+  const numberErrors = useInputsErrors(address?.number);
 
   const isValidPostalCode = isValidCEP(debouncedValue);
 
@@ -68,6 +77,8 @@ export const LocaleAddress = () => {
             shouldDirty: false,
           });
 
+          clearErrors('address.zipCode');
+
           setShowAddressMap(true);
         }
 
@@ -78,7 +89,7 @@ export const LocaleAddress = () => {
         return er?.message;
       },
     });
-  }, [debouncedValue, isValidPostalCode, setValue]);
+  }, [debouncedValue, isValidPostalCode, setValue, clearErrors]);
 
   React.useEffect(() => {
     fetchAddressByZipCode();
@@ -95,7 +106,7 @@ export const LocaleAddress = () => {
       <div className="py-10">
         <div className="flex items-center justify-start gap-4">
           <div className="w-[168px]">
-            <div className="w-full">
+            <div className="w-full relative mb-6">
               <Input
                 label="CEP"
                 placeholder="00000-000"
@@ -104,34 +115,64 @@ export const LocaleAddress = () => {
                 {...register('address.zipCode')}
                 onChange={addZipCodeWithMask}
               />
+
+              <div className="absolute">
+                {postalCodeErrors?.hasError && (
+                  <ErrorMessage message={postalCodeErrors?.message} />
+                )}
+              </div>
             </div>
           </div>
 
           <div className="flex-1">
-            <Input
-              label="Rua"
-              disabled={disabled}
-              {...register('address.street')}
-            />
+            <div className="w-full relative mb-6">
+              <Input
+                label="Rua"
+                disabled={disabled}
+                {...register('address.street')}
+              />
+
+              <div className="absolute">
+                {streetErrors?.hasError && (
+                  <ErrorMessage message={streetErrors?.message} />
+                )}
+              </div>
+            </div>
           </div>
         </div>
 
         <div className="flex items-center justify-start gap-4 mt-4">
           <div className="flex-1">
-            <Input
-              label="Bairro"
-              disabled={disabled}
-              {...register('address.neighborhood')}
-            />
+            <div className="w-full relative mb-6">
+              <Input
+                label="Bairro"
+                disabled={disabled}
+                {...register('address.neighborhood')}
+              />
+
+              <div className="absolute">
+                {neighborhoodErrors?.hasError && (
+                  <ErrorMessage message={neighborhoodErrors?.message} />
+                )}
+              </div>
+            </div>
           </div>
 
           <div className="w-[168px]">
-            <Input
-              label="Número"
-              placeholder="S/N"
-              disabled={disabled}
-              {...register('address.number')}
-            />
+            <div className="w-full relative mb-6">
+              <Input
+                label="Número"
+                placeholder="S/N"
+                disabled={disabled}
+                {...register('address.number')}
+              />
+
+              <div className="absolute">
+                {numberErrors?.hasError && (
+                  <ErrorMessage message={numberErrors?.message} />
+                )}
+              </div>
+            </div>
           </div>
         </div>
 
@@ -142,24 +183,6 @@ export const LocaleAddress = () => {
             {...register('address.complement')}
           />
         </div>
-
-        {/* <ul className="list-inside">
-          {postalCode?.hasError && (
-            <li>
-              <ErrorMessage message={postalCode?.message} />
-            </li>
-          )}
-          {street?.hasError && (
-            <li>
-              <ErrorMessage message={street?.message} />
-            </li>
-          )}
-          {neighborhood?.hasError && (
-            <li>
-              <ErrorMessage message={neighborhood?.message} />
-            </li>
-          )}
-        </ul> */}
 
         {showAddressMap && (
           <div className="w-full mt-10 h-[245px] rounded-lg overflow-hidden">
