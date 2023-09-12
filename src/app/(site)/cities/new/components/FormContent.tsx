@@ -16,10 +16,6 @@ type Props = {
 };
 
 export const FormContent = ({ categories = [] }: Props) => {
-  const [isLoading, setIsLoading] = React.useState(false);
-
-  const isDisabled = isLoading;
-
   const currentStep = useCityStore((state) => state.currentStep);
 
   const form = useForm<CityFormData>({
@@ -36,9 +32,7 @@ export const FormContent = ({ categories = [] }: Props) => {
     },
   });
 
-  const { register, formState, handleSubmit, setValue } = form;
-
-  const { errors } = formState;
+  const { handleSubmit } = form;
 
   const onSubmit: SubmitHandler<CityFormData> = React.useCallback(
     async (data) => {
@@ -54,11 +48,7 @@ export const FormContent = ({ categories = [] }: Props) => {
           <NewCityForm className={currentStep === '02' ? 'hidden' : ''} />
 
           <NewLocaleForm
-            isDisabled={isDisabled}
-            errors={errors}
-            register={register}
             className={currentStep === '01' ? 'hidden' : ''}
-            setValue={setValue}
             categories={categories}
           />
         </form>

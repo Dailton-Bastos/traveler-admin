@@ -1,16 +1,23 @@
 import React from 'react';
+import { useFormContext } from 'react-hook-form';
 import { FiPlus } from 'react-icons/fi';
 import { twMerge } from 'tailwind-merge';
+
 import { ErrorMessage } from '~/components/ErrorMessage';
 import { FileInput } from '~/components/FileInput';
+import { useInputsErrors } from '~/hooks/useInputsErrors';
+import type { CityFormData } from '~/@types/types';
 
-type Props = {
-  isDisabled: boolean;
-  hasError: boolean;
-  errorMessage: string;
-};
+export const LocaleImage = () => {
+  const { formState } = useFormContext<CityFormData>();
 
-export const LocaleImage = ({ isDisabled, hasError, errorMessage }: Props) => {
+  const { isSubmitting, errors } = formState;
+
+  const { hasError, message } = useInputsErrors<CityFormData>(
+    errors,
+    'localeImage'
+  );
+
   const accept = React.useMemo(
     () => ({
       'image/png': ['.png'],
@@ -29,7 +36,7 @@ export const LocaleImage = ({ isDisabled, hasError, errorMessage }: Props) => {
           overflow-hidden
           mt-2
       `,
-          isDisabled && 'cursor-not-allowed pointer-events-none'
+          isSubmitting && 'cursor-not-allowed pointer-events-none'
         )}
       >
         <FileInput
@@ -43,7 +50,7 @@ export const LocaleImage = ({ isDisabled, hasError, errorMessage }: Props) => {
         </FileInput>
       </div>
 
-      {hasError && <ErrorMessage message={errorMessage} />}
+      {hasError && <ErrorMessage message={message} />}
     </div>
   );
 };

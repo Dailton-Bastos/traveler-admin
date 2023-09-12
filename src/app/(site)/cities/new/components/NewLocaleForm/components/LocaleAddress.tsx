@@ -1,22 +1,16 @@
 import React from 'react';
 import toast from 'react-hot-toast';
-import { FieldErrors, UseFormRegister, UseFormSetValue } from 'react-hook-form';
+import { useFormContext } from 'react-hook-form';
 import { RotatingLines } from 'react-loader-spinner';
 import dynamic from 'next/dynamic';
-import uniqid from 'uniqid';
 import cep from 'cep-promise';
 import { isValidCEP } from '@brazilian-utils/brazilian-utils';
-import { CityFormData } from '~/@types/types';
-import { ErrorMessage } from '~/components/ErrorMessage';
+
+// import { ErrorMessage } from '~/components/ErrorMessage';
 import { Input } from '~/components/Input';
 import { useDebounce } from '~/hooks/useDebounce';
-
-type Props = {
-  register: UseFormRegister<CityFormData>;
-  isDisabled: boolean;
-  errors: FieldErrors<CityFormData>;
-  setValue: UseFormSetValue<CityFormData>;
-};
+// import { useInputsErrors } from '~/hooks/useInputsErrors';
+import type { CityFormData } from '~/@types/types';
 
 const Map = dynamic(() => import('~/components/Map'), {
   ssr: false,
@@ -31,46 +25,19 @@ const Map = dynamic(() => import('~/components/Map'), {
   ),
 });
 
-export const LocaleAddress = ({
-  register,
-  setValue,
-  isDisabled,
-  errors,
-}: Props) => {
+export const LocaleAddress = () => {
   const [zipCode, setZipCode] = React.useState('');
   const [showAddressMap, setShowAddressMap] = React.useState(false);
 
   const debouncedValue = useDebounce<string>(zipCode, 1000);
 
+  const { register, formState, setValue } = useFormContext<CityFormData>();
+
+  const { isSubmitting } = formState;
+
   const isValidPostalCode = isValidCEP(debouncedValue);
 
-  const disabled = isDisabled || !isValidPostalCode;
-
-  const formsErrors = React.useMemo(
-    () => [
-      {
-        id: uniqid(),
-        hasError: Boolean(errors?.address?.zipCode),
-        message: errors?.address?.zipCode?.message?.toString() ?? '',
-      },
-      {
-        id: uniqid(),
-        hasError: Boolean(errors?.address?.street),
-        message: errors?.address?.street?.message?.toString() ?? '',
-      },
-      {
-        id: uniqid(),
-        hasError: Boolean(errors?.address?.neighborhood),
-        message: errors?.address?.neighborhood?.message?.toString() ?? '',
-      },
-      {
-        id: uniqid(),
-        hasError: Boolean(errors?.address?.number),
-        message: errors?.address?.number?.message?.toString() ?? '',
-      },
-    ],
-    [errors]
-  );
+  const disabled = isSubmitting || !isValidPostalCode;
 
   const addZipCodeWithMask = React.useCallback(
     (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -176,17 +143,23 @@ export const LocaleAddress = ({
           />
         </div>
 
-        <ul className="list-inside">
-          {formsErrors?.map((error) => {
-            if (error?.hasError) {
-              return (
-                <li key={error?.id}>
-                  <ErrorMessage message={error?.message} />
-                </li>
-              );
-            }
-          })}
-        </ul>
+        {/* <ul className="list-inside">
+          {postalCode?.hasError && (
+            <li>
+              <ErrorMessage message={postalCode?.message} />
+            </li>
+          )}
+          {street?.hasError && (
+            <li>
+              <ErrorMessage message={street?.message} />
+            </li>
+          )}
+          {neighborhood?.hasError && (
+            <li>
+              <ErrorMessage message={neighborhood?.message} />
+            </li>
+          )}
+        </ul> */}
 
         {showAddressMap && (
           <div className="w-full mt-10 h-[245px] rounded-lg overflow-hidden">

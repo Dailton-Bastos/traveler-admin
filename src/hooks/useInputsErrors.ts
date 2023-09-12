@@ -1,5 +1,5 @@
 import React from 'react';
-import { FieldErrors, FieldValues } from 'react-hook-form';
+import { FieldErrors, FieldValues, FieldError } from 'react-hook-form';
 
 export function useInputsErrors<T extends FieldValues>(
   errors: FieldErrors<T>,

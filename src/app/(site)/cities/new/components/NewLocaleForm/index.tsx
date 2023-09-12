@@ -1,8 +1,6 @@
 'use client';
 
 import React from 'react';
-import type { FieldErrors, UseFormSetValue } from 'react-hook-form';
-import { UseFormRegister } from 'react-hook-form';
 import { twMerge } from 'tailwind-merge';
 
 import { Button } from '~/components/Button';
@@ -10,7 +8,7 @@ import { Alert } from '~/components/Alert';
 
 import { FormHeader } from '../FormHeader';
 import { useCityStore } from '~/stores/useCityStore';
-import type { Category, CityFormData } from '~/@types/types';
+import type { Category } from '~/@types/types';
 
 import { LocaleName } from './components/LocaleName';
 import { LocaleImage } from './components/LocaleImage';
@@ -19,44 +17,12 @@ import { LocaleCategory } from './components/LocaleCategory';
 import { LocaleAddress } from './components/LocaleAddress';
 
 type Props = {
-  isDisabled: boolean;
-  errors: FieldErrors<CityFormData>;
-  register: UseFormRegister<CityFormData>;
   className?: string;
-  setValue: UseFormSetValue<CityFormData>;
   categories: Category[];
 };
 
-export const NewLocaleForm = (props: Props) => {
-  const { isDisabled, errors, register, className, setValue, categories } =
-    props;
-
+export const NewLocaleForm = ({ className, categories }: Props) => {
   const goToPreviousStep = useCityStore((state) => state.setCurrentStep);
-
-  const formsErrors = React.useMemo(
-    () => ({
-      name: {
-        hasError: Boolean(errors?.localeName),
-        message: errors?.localeName?.message?.toString() ?? '',
-      },
-
-      image: {
-        hasError: Boolean(errors?.localeImage),
-        message: errors?.localeImage?.message?.toString() ?? '',
-      },
-
-      description: {
-        hasError: Boolean(errors?.localeDescription),
-        message: errors?.localeDescription?.message?.toString() ?? '',
-      },
-
-      category: {
-        hasError: Boolean(errors?.categoryId),
-        message: errors?.categoryId?.message?.toString() ?? '',
-      },
-    }),
-    [errors]
-  );
 
   const handleGoToPreviousStep = React.useCallback(() => {
     goToPreviousStep('01');
@@ -80,38 +46,15 @@ export const NewLocaleForm = (props: Props) => {
         </div>
 
         <div className="flex flex-col items-start pt-6 gap-y-6">
-          <LocaleName
-            register={register}
-            isDisabled={isDisabled}
-            hasError={formsErrors?.name?.hasError}
-            errorMessage={formsErrors?.name?.message}
-          />
+          <LocaleName />
 
-          <LocaleImage
-            isDisabled={isDisabled}
-            hasError={formsErrors?.image?.hasError}
-            errorMessage={formsErrors?.image?.message}
-          />
+          <LocaleImage />
 
-          <LocaleDescription
-            setValue={setValue}
-            hasError={formsErrors?.description?.hasError}
-            errorMessage={formsErrors?.description?.message}
-          />
+          <LocaleDescription />
 
-          <LocaleCategory
-            setValue={setValue}
-            hasError={formsErrors?.category?.hasError}
-            errorMessage={formsErrors?.category?.message}
-            categories={categories}
-          />
+          <LocaleCategory categories={categories} />
 
-          <LocaleAddress
-            register={register}
-            setValue={setValue}
-            isDisabled={isDisabled}
-            errors={errors}
-          />
+          <LocaleAddress />
         </div>
 
         <div className="flex items-center justify-between">

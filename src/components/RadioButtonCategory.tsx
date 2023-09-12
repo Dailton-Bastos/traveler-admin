@@ -56,7 +56,7 @@ export const RadioButtonCategory = React.forwardRef<HTMLInputElement, Props>(
                 rounded-lg
                 border
               `,
-                checked && 'bg-[#DCF5DD] border-2 border-green-500'
+                checked && 'bg-[#DCF5DD] border-2 border-green-500 transition'
               )}
             >
               <div

@@ -1,23 +1,25 @@
 import React from 'react';
-import { UseFormSetValue } from 'react-hook-form';
+import { useFormContext } from 'react-hook-form';
 import { ErrorMessage } from '~/components/ErrorMessage';
 import { RadioButtonCategory } from '~/components/RadioButtonCategory';
+import { useInputsErrors } from '~/hooks/useInputsErrors';
 import type { Category, CityFormData } from '~/@types/types';
 
 type Props = {
-  hasError: boolean;
-  errorMessage: string;
-  setValue: UseFormSetValue<CityFormData>;
   categories: Category[];
 };
 
-export const LocaleCategory = ({
-  hasError,
-  errorMessage,
-  setValue,
-  categories,
-}: Props) => {
+export const LocaleCategory = ({ categories }: Props) => {
   const [categoryId, setCategoryId] = React.useState('');
+
+  const { setValue, formState } = useFormContext<CityFormData>();
+
+  const { isSubmitting, errors } = formState;
+
+  const { hasError, message } = useInputsErrors<CityFormData>(
+    errors,
+    'categoryId'
+  );
 
   const handleChangeCategory = React.useCallback(
     (id: string): void => {
@@ -50,12 +52,13 @@ export const LocaleCategory = ({
               onChange={() => handleChangeCategory(id)}
               category={item}
               checked={categoryId === id}
+              disabled={isSubmitting}
             />
           );
         })}
       </div>
 
-      {hasError && <ErrorMessage message={errorMessage} />}
+      {hasError && <ErrorMessage message={message} />}
     </div>
   );
 };
