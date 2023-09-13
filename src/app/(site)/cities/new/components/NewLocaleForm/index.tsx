@@ -15,6 +15,7 @@ import { LocaleImage } from './components/LocaleImage';
 import { LocaleDescription } from './components/LocaleDescription';
 import { LocaleCategory } from './components/LocaleCategory';
 import { LocaleAddress } from './components/LocaleAddress';
+import { useFormContext } from 'react-hook-form';
 
 type Props = {
   className?: string;
@@ -23,6 +24,10 @@ type Props = {
 
 export const NewLocaleForm = ({ className, categories }: Props) => {
   const goToPreviousStep = useCityStore((state) => state.setCurrentStep);
+
+  const {
+    formState: { isSubmitting },
+  } = useFormContext();
 
   const handleGoToPreviousStep = React.useCallback(() => {
     goToPreviousStep('01');
@@ -63,6 +68,7 @@ export const NewLocaleForm = ({ className, categories }: Props) => {
           <div className="flex items-center justify-center gap-2">
             <Button
               type="button"
+              disabled={isSubmitting}
               className="bg-blue-500 font-semibold hover:bg-blue-900"
               onClick={handleGoToPreviousStep}
             >
@@ -71,6 +77,7 @@ export const NewLocaleForm = ({ className, categories }: Props) => {
 
             <Button
               type="submit"
+              disabled={isSubmitting}
               className="bg-green-500 font-semibold hover:bg-green-600"
             >
               Concluir cadastro

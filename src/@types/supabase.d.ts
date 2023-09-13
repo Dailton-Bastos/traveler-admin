@@ -3,12 +3,63 @@ export type Json =
   | number
   | boolean
   | null
-  | { [key: string]: Json }
+  | { [key: string]: Json | undefined }
   | Json[]
 
 export interface Database {
   public: {
     Tables: {
+      categories: {
+        Row: {
+          created_at: string | null
+          id: number
+          image_path: string | null
+          name: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          id?: number
+          image_path?: string | null
+          name?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          id?: number
+          image_path?: string | null
+          name?: string | null
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
+      cities: {
+        Row: {
+          created_at: string
+          description: string | null
+          id: number
+          image_path: string | null
+          name: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          id?: number
+          image_path?: string | null
+          name?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          id?: number
+          image_path?: string | null
+          name?: string | null
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
       users: {
         Row: {
           avatar_url: string | null
