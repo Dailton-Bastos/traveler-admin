@@ -24,6 +24,14 @@ type CityData = {
   image_path: string;
 };
 
+type AddressData = {
+  postal_code: string;
+  street: string;
+  neighborhood: string;
+  number: string;
+  complement?: string;
+};
+
 export const FormContent = ({ categories = [] }: Props) => {
   const currentStep = useCityStore((state) => state.currentStep);
 
@@ -77,6 +85,27 @@ export const FormContent = ({ categories = [] }: Props) => {
     [supabaseClient]
   );
 
+  const createNewAddress = React.useCallback(
+    async (addressData: AddressData) => {
+      const { postal_code, street, neighborhood, number, complement } =
+        addressData;
+
+      const { data, error } = await supabaseClient
+        .from('addresses')
+        .insert({
+          postal_code,
+          street,
+          neighborhood,
+          number,
+          complement,
+        })
+        .select();
+
+      return { data, error };
+    },
+    [supabaseClient]
+  );
+
   const onSubmit: SubmitHandler<CityFormData> = React.useCallback(
     async (data) => {
       try {
@@ -93,24 +122,42 @@ export const FormContent = ({ categories = [] }: Props) => {
 
         if (cityImageError) return toast.error('Ocorreu um error!');
 
-        const { data: cityData, error: cityError } = await createNewCity({
+        const dataCity = {
           name: data?.cityName,
           image_path: cityImageData?.path as string,
           description: data?.cityDescription,
-        });
+        };
 
-        if (cityError) return toast.error(cityError?.message);
-      } catch (error) {}
-      // const address = { ...data?.address };
+        const dataAddress = {
+          ...data?.address,
+          postal_code: data?.address?.zipCode,
+        };
 
-      // const locale = {
-      //   name: data?.localeName,
-      //   description: data?.localeDescription,
-      //   image: data?.localeImage,
-      //   category: data?.categoryId,
-      // };
+        const promiseCity = createNewCity(dataCity);
+
+        const promiseAddress = createNewAddress(dataAddress);
+
+        const [resolvedCity, resolvedAddress] = await Promise.all([
+          promiseCity,
+          promiseAddress,
+        ]);
+
+        if (resolvedCity?.error)
+          return toast.error(resolvedCity?.error?.message);
+
+        if (resolvedAddress?.error)
+          return toast.error(resolvedAddress?.error?.message);
+
+        if (!resolvedCity?.data) return;
+        if (!resolvedAddress?.data) return;
+
+        // const cityId = resolvedCity?.data[0]?.id;
+        // const addressId = resolvedAddress?.data[0]?.id;
+      } catch (_) {
+        return toast.error('Ocorreu um error!');
+      }
     },
-    [uploadImage, createNewCity]
+    [uploadImage, createNewCity, createNewAddress]
   );
 
   return (
