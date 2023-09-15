@@ -28,14 +28,14 @@ export const cityFormValidationSchema = zod.object({
   cityDescription: zod.string({ required_error: MESSAGE }).trim().min(100, {
     message: 'Mínimo de 100 caracteres',
   }),
-  localeName: zod
+  placeName: zod
     .string({
       required_error: MESSAGE,
     })
     .trim()
     .min(1, { message: MESSAGE }),
 
-  localeImage: zod
+  placeImage: zod
     .any()
     .refine((files) => files?.length == 1, MESSAGE)
     .refine(
@@ -46,7 +46,7 @@ export const cityFormValidationSchema = zod.object({
       (files) => ACCEPTED_IMAGE_TYPES.includes(files?.[0]?.type),
       'Apenas JPEG, JPG e PNG'
     ),
-  localeDescription: zod.string({ required_error: MESSAGE }).trim().min(100, {
+  placeDescription: zod.string({ required_error: MESSAGE }).trim().min(100, {
     message: 'Mínimo de 100 caracteres',
   }),
   categoryId: zod

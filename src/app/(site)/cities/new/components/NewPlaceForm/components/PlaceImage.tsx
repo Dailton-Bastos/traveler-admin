@@ -8,15 +8,15 @@ import { FileInput } from '~/components/FileInput';
 import { useInputsErrors } from '~/hooks/useInputsErrors';
 import type { CityFormData } from '~/@types/types';
 
-export const LocaleImage = () => {
+export const PlaceImage = () => {
   const { formState } = useFormContext<CityFormData>();
 
   const {
     isSubmitting,
-    errors: { localeImage },
+    errors: { placeImage },
   } = formState;
 
-  const { hasError, message } = useInputsErrors(localeImage);
+  const { hasError, message } = useInputsErrors(placeImage);
 
   const accept = React.useMemo(
     () => ({

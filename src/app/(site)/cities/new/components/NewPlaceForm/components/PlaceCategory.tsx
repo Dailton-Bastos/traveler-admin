@@ -9,7 +9,7 @@ type Props = {
   categories: Category[];
 };
 
-export const LocaleCategory = ({ categories }: Props) => {
+export const PlaceCategory = ({ categories }: Props) => {
   const [categoryId, setCategoryId] = React.useState('');
 
   const { setValue, formState } = useFormContext<CityFormData>();

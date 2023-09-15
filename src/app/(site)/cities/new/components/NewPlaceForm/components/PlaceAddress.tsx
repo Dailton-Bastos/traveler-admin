@@ -25,7 +25,7 @@ const Map = dynamic(() => import('~/components/Map'), {
   ),
 });
 
-export const LocaleAddress = () => {
+export const PlaceAddress = () => {
   const [zipCode, setZipCode] = React.useState('');
   const [showAddressMap, setShowAddressMap] = React.useState(false);
 

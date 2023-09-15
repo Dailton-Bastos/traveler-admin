@@ -10,7 +10,7 @@ import uniqid from 'uniqid';
 import { useCityStore } from '~/stores/useCityStore';
 
 import { NewCityForm } from './NewCityForm';
-import { NewLocaleForm } from './NewLocaleForm';
+import { NewPlaceForm } from './NewPlaceForm';
 import { cityFormValidationSchema } from '~/schemas/newCitySchema';
 import type { Category, CityFormData } from '~/@types/types';
 
@@ -44,9 +44,9 @@ export const FormContent = ({ categories = [] }: Props) => {
       cityName: '',
       cityImage: null,
       cityDescription: '',
-      localeName: '',
-      localeImage: null,
-      localeDescription: '',
+      placeName: '',
+      placeImage: null,
+      placeDescription: '',
       categoryId: '',
     },
   });
@@ -166,7 +166,7 @@ export const FormContent = ({ categories = [] }: Props) => {
         <form onSubmit={handleSubmit(onSubmit)}>
           <NewCityForm className={currentStep === '02' ? 'hidden' : ''} />
 
-          <NewLocaleForm
+          <NewPlaceForm
             className={currentStep === '01' ? 'hidden' : ''}
             categories={categories}
           />

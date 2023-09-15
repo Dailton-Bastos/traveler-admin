@@ -6,24 +6,24 @@ import { ErrorMessage } from '~/components/ErrorMessage';
 import { useInputsErrors } from '~/hooks/useInputsErrors';
 import type { CityFormData } from '~/@types/types';
 
-export const LocaleName = () => {
+export const PlaceName = () => {
   const { register, formState } = useFormContext<CityFormData>();
 
   const {
     isSubmitting,
-    errors: { localeName },
+    errors: { placeName },
   } = formState;
 
-  const { hasError, message } = useInputsErrors(localeName);
+  const { hasError, message } = useInputsErrors(placeName);
 
   return (
     <div className="w-full">
       <Input
-        id="localeName"
+        id="placeName"
         label="Nome do local"
         disabled={isSubmitting}
         hasError={hasError}
-        {...register('localeName')}
+        {...register('placeName')}
       />
 
       {hasError && <ErrorMessage message={message} />}

@@ -10,11 +10,11 @@ import { FormHeader } from '../FormHeader';
 import { useCityStore } from '~/stores/useCityStore';
 import type { Category } from '~/@types/types';
 
-import { LocaleName } from './components/LocaleName';
-import { LocaleImage } from './components/LocaleImage';
-import { LocaleDescription } from './components/LocaleDescription';
-import { LocaleCategory } from './components/LocaleCategory';
-import { LocaleAddress } from './components/LocaleAddress';
+import { PlaceName } from './components/PlaceName';
+import { PlaceImage } from './components/PlaceImage';
+import { PlaceDescription } from './components/PlaceDescription';
+import { PlaceCategory } from './components/PlaceCategory';
+import { PlaceAddress } from './components/PlaceAddress';
 import { useFormContext } from 'react-hook-form';
 
 type Props = {
@@ -22,7 +22,7 @@ type Props = {
   categories: Category[];
 };
 
-export const NewLocaleForm = ({ className, categories }: Props) => {
+export const NewPlaceForm = ({ className, categories }: Props) => {
   const goToPreviousStep = useCityStore((state) => state.setCurrentStep);
 
   const {
@@ -51,15 +51,15 @@ export const NewLocaleForm = ({ className, categories }: Props) => {
         </div>
 
         <div className="flex flex-col items-start pt-6 gap-y-6">
-          <LocaleName />
+          <PlaceName />
 
-          <LocaleImage />
+          <PlaceImage />
 
-          <LocaleDescription />
+          <PlaceDescription />
 
-          <LocaleCategory categories={categories} />
+          <PlaceCategory categories={categories} />
 
-          <LocaleAddress />
+          <PlaceAddress />
         </div>
 
         <div className="flex items-center justify-between">

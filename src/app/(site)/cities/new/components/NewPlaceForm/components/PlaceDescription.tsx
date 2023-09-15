@@ -6,17 +6,17 @@ import { ErrorMessage } from '~/components/ErrorMessage';
 import { useInputsErrors } from '~/hooks/useInputsErrors';
 import type { CityFormData } from '~/@types/types';
 
-export const LocaleDescription = () => {
+export const PlaceDescription = () => {
   const [description, setDescription] = React.useState('');
 
   const { setValue, formState } = useFormContext<CityFormData>();
 
   const {
     isSubmitting,
-    errors: { localeDescription },
+    errors: { placeDescription },
   } = formState;
 
-  const { hasError, message } = useInputsErrors(localeDescription);
+  const { hasError, message } = useInputsErrors(placeDescription);
 
   const handleEditorChange = React.useCallback(
     (data: { html: string; text: string }) => {
@@ -24,7 +24,7 @@ export const LocaleDescription = () => {
 
       setDescription(text);
 
-      setValue('localeDescription', text, {
+      setValue('placeDescription', text, {
         shouldValidate: true,
         shouldDirty: false,
       });
