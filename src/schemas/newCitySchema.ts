@@ -16,7 +16,7 @@ export const cityFormValidationSchema = zod.object({
 
   cityImage: zod
     .any()
-    .refine((files) => files?.length == 1, 'Imagem obrigatória')
+    .refine((files) => files?.length == 1, 'Adicione uma imagem da cidade')
     .refine(
       (files) => files?.[0]?.size <= MAX_FILE_SIZE,
       `Tamanho máximo de 5MB.`
@@ -37,7 +37,7 @@ export const cityFormValidationSchema = zod.object({
 
   placeImage: zod
     .any()
-    .refine((files) => files?.length == 1, MESSAGE)
+    .refine((files) => files?.length == 1, 'Adicione uma imagem do local')
     .refine(
       (files) => files?.[0]?.size <= MAX_FILE_SIZE,
       `Tamanho máximo de 5MB.`

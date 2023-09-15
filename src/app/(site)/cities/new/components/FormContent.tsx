@@ -3,6 +3,7 @@
 import React from 'react';
 import { FormProvider, SubmitHandler, useForm } from 'react-hook-form';
 import { toast } from 'react-hot-toast';
+import { useRouter } from 'next/navigation';
 import { useSupabaseClient } from '@supabase/auth-helpers-react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import uniqid from 'uniqid';
@@ -32,10 +33,21 @@ type AddressData = {
   complement?: string;
 };
 
+type PlaceData = {
+  city_id: number;
+  address_id: number;
+  category_id: number;
+  name: string;
+  description: string;
+  image_path: string;
+};
+
 export const FormContent = ({ categories = [] }: Props) => {
   const currentStep = useCityStore((state) => state.currentStep);
+  const goToPreviousStep = useCityStore((state) => state.setCurrentStep);
 
   const supabaseClient = useSupabaseClient();
+  const router = useRouter();
 
   const form = useForm<CityFormData>({
     resolver: zodResolver(cityFormValidationSchema),
@@ -51,7 +63,7 @@ export const FormContent = ({ categories = [] }: Props) => {
     },
   });
 
-  const { handleSubmit } = form;
+  const { handleSubmit, reset } = form;
 
   const uploadImage = React.useCallback(
     async (path: string, fileBody: File) => {
@@ -106,6 +118,31 @@ export const FormContent = ({ categories = [] }: Props) => {
     [supabaseClient]
   );
 
+  const createNewPlace = React.useCallback(
+    async (placeData: PlaceData) => {
+      const {
+        city_id,
+        address_id,
+        category_id,
+        image_path,
+        name,
+        description,
+      } = placeData;
+
+      const { error } = await supabaseClient.from('places').insert({
+        city_id,
+        address_id,
+        category_id,
+        image_path,
+        name,
+        description,
+      });
+
+      return { error };
+    },
+    [supabaseClient]
+  );
+
   const onSubmit: SubmitHandler<CityFormData> = React.useCallback(
     async (data) => {
       try {
@@ -124,7 +161,7 @@ export const FormContent = ({ categories = [] }: Props) => {
 
         const dataCity = {
           name: data?.cityName,
-          image_path: cityImageData?.path as string,
+          image_path: cityImageData?.path ?? '',
           description: data?.cityDescription,
         };
 
@@ -151,13 +188,52 @@ export const FormContent = ({ categories = [] }: Props) => {
         if (!resolvedCity?.data) return;
         if (!resolvedAddress?.data) return;
 
-        // const cityId = resolvedCity?.data[0]?.id;
-        // const addressId = resolvedAddress?.data[0]?.id;
+        const placeImage: File = data?.placeImage?.[0];
+
+        if (!placeImage) return toast.error('Adicione uma foto do local');
+
+        const placeImagePath = `places/image-place-${uniqueID}`;
+
+        const { data: placeImageData, error: placeImageError } =
+          await uploadImage(placeImagePath, placeImage);
+
+        if (placeImageError) return toast.error('Ocorreu um error!');
+
+        const city_id = resolvedCity?.data[0]?.id;
+        const address_id = resolvedAddress?.data[0]?.id;
+
+        const placeData: PlaceData = {
+          city_id,
+          address_id,
+          category_id: Number(data?.categoryId),
+          name: data?.placeName,
+          description: data?.placeDescription,
+          image_path: placeImageData?.path ?? '',
+        };
+
+        const { error } = await createNewPlace(placeData);
+
+        if (error) return toast.error('Ocorreu um erro!');
+
+        toast.success('Cadastrado com sucesso!');
+
+        reset();
+
+        router.push('/cities');
+        goToPreviousStep('01');
       } catch (_) {
         return toast.error('Ocorreu um error!');
       }
     },
-    [uploadImage, createNewCity, createNewAddress]
+    [
+      uploadImage,
+      createNewCity,
+      createNewAddress,
+      createNewPlace,
+      reset,
+      router,
+      goToPreviousStep,
+    ]
   );
 
   return (

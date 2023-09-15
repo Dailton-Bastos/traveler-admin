@@ -9,6 +9,39 @@ export type Json =
 export interface Database {
   public: {
     Tables: {
+      addresses: {
+        Row: {
+          complement: string | null
+          created_at: string
+          id: number
+          neighborhood: string | null
+          number: string | null
+          postal_code: string | null
+          street: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          complement?: string | null
+          created_at?: string
+          id?: number
+          neighborhood?: string | null
+          number?: string | null
+          postal_code?: string | null
+          street?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          complement?: string | null
+          created_at?: string
+          id?: number
+          neighborhood?: string | null
+          number?: string | null
+          postal_code?: string | null
+          street?: string | null
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
       categories: {
         Row: {
           created_at: string | null
@@ -59,6 +92,61 @@ export interface Database {
           updated_at?: string | null
         }
         Relationships: []
+      }
+      places: {
+        Row: {
+          address_id: number
+          category_id: number | null
+          city_id: number
+          created_at: string
+          description: string
+          id: number
+          image_path: string
+          name: string
+          updated_at: string
+        }
+        Insert: {
+          address_id: number
+          category_id?: number | null
+          city_id: number
+          created_at?: string
+          description: string
+          id?: number
+          image_path: string
+          name: string
+          updated_at?: string
+        }
+        Update: {
+          address_id?: number
+          category_id?: number | null
+          city_id?: number
+          created_at?: string
+          description?: string
+          id?: number
+          image_path?: string
+          name?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "places_address_id_fkey"
+            columns: ["address_id"]
+            referencedRelation: "addresses"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "places_category_id_fkey"
+            columns: ["category_id"]
+            referencedRelation: "categories"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "places_city_id_fkey"
+            columns: ["city_id"]
+            referencedRelation: "cities"
+            referencedColumns: ["id"]
+          }
+        ]
       }
       users: {
         Row: {

@@ -42,7 +42,7 @@ export const PlaceImage = () => {
         <FileInput
           className="w-full h-[160px]"
           accept={accept}
-          name="localeImage"
+          name="placeImage"
           hasError={hasError}
         >
           <FiPlus size={14} color="#F25D27" />{' '}
