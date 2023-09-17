@@ -4,6 +4,7 @@ import { heebo, barlow, roboto } from './fonts';
 import { ToasterProvider } from '~/providers/ToasterProvider';
 import { SupabaseProvider } from '~/context/SupabaseContext';
 import { UserProvider } from '~/context/UserContext';
+import { ModalProvider } from '~/providers/ModalProvider';
 
 export const metadata = {
   title: 'Traveler',
@@ -24,6 +25,7 @@ export default function RootLayout({
         <ToasterProvider />
 
         <SupabaseProvider>
+          <ModalProvider />
           <UserProvider>{children}</UserProvider>
         </SupabaseProvider>
       </body>

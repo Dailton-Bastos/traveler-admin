@@ -13,6 +13,7 @@ import { useCityStore } from '~/stores/useCityStore';
 import { NewCityForm } from './NewCityForm';
 import { NewPlaceForm } from './NewPlaceForm';
 import { cityFormValidationSchema } from '~/schemas/newCitySchema';
+import { useSuccessfullyModal } from '~/hooks/useSuccessfullyModal';
 import type { Category, CityFormData } from '~/@types/types';
 
 type Props = {
@@ -64,6 +65,16 @@ export const FormContent = ({ categories = [] }: Props) => {
   });
 
   const { handleSubmit, reset } = form;
+
+  const { onOpenChange, setDescription, setTitle } = useSuccessfullyModal();
+
+  const sucessfullyModal = React.useCallback(() => {
+    setTitle('Perfil cadastrado!');
+    setDescription(
+      'Você tem uma nova cidade e um novo ponto cadastrado. Continue sempre  adicionando locais incríveis.'
+    );
+    onOpenChange();
+  }, [setTitle, setDescription, onOpenChange]);
 
   const uploadImage = React.useCallback(
     async (path: string, fileBody: File) => {
@@ -215,7 +226,7 @@ export const FormContent = ({ categories = [] }: Props) => {
 
         if (error) return toast.error('Ocorreu um erro!');
 
-        toast.success('Cadastrado com sucesso!');
+        sucessfullyModal();
 
         reset();
 
@@ -226,6 +237,7 @@ export const FormContent = ({ categories = [] }: Props) => {
       }
     },
     [
+      sucessfullyModal,
       uploadImage,
       createNewCity,
       createNewAddress,

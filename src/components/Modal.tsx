@@ -6,27 +6,19 @@ import { twMerge } from 'tailwind-merge';
 
 interface ModalProps {
   isOpen: boolean;
-  onChange: (open: boolean) => void;
+  onOpenChange: (open: boolean) => void;
   className?: string;
   children: React.ReactNode;
 }
 
 export const Modal = ({
   isOpen = false,
-  onChange,
+  onOpenChange,
   className,
   children,
 }: ModalProps) => {
-  const [isMounted, setIsMounted] = React.useState(false);
-
-  React.useEffect(() => {
-    setIsMounted(true);
-  }, []);
-
-  if (!isMounted) return null;
-
   return (
-    <Dialog.Root open={isOpen} defaultOpen={isOpen} onOpenChange={onChange}>
+    <Dialog.Root open={isOpen} defaultOpen={isOpen} onOpenChange={onOpenChange}>
       <Dialog.Portal>
         <Dialog.Overlay
           className={twMerge(
