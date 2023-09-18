@@ -1,5 +1,3 @@
-'use client';
-
 import React from 'react';
 import * as Dialog from '@radix-ui/react-dialog';
 import { twMerge } from 'tailwind-merge';
@@ -23,7 +21,6 @@ export const Modal = ({
         <Dialog.Overlay
           className={twMerge(
             `
-            bg-blue-900/90
             backdrop-blur-sm
             fixed
             inset-0

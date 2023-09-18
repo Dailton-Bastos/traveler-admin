@@ -2,10 +2,13 @@
 
 import React from 'react';
 import { SuccessfullyModal } from '~/components/SuccessfullyModal';
-import { useIsMounted } from '~/hooks/useIsMounted';
 
 export const ModalProvider = () => {
-  const isMounted = useIsMounted();
+  const [isMounted, setIsMounted] = React.useState(false);
+
+  React.useEffect(() => {
+    setIsMounted(true);
+  }, []);
 
   if (!isMounted) return null;
 

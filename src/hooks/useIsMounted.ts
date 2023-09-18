@@ -11,5 +11,5 @@ export const useIsMounted = () => {
     };
   }, []);
 
-  return React.useCallback(() => isMounted.current, []);
+  return { isMounted: isMounted.current };
 };

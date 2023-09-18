@@ -66,15 +66,13 @@ export const FormContent = ({ categories = [] }: Props) => {
 
   const { handleSubmit, reset } = form;
 
-  const { onOpenChange, setDescription, setTitle } = useSuccessfullyModal();
+  const { onOpenChange, setTitle } = useSuccessfullyModal();
 
   const sucessfullyModal = React.useCallback(() => {
     setTitle('Perfil cadastrado!');
-    setDescription(
-      'Você tem uma nova cidade e um novo ponto cadastrado. Continue sempre  adicionando locais incríveis.'
-    );
+
     onOpenChange();
-  }, [setTitle, setDescription, onOpenChange]);
+  }, [setTitle, onOpenChange]);
 
   const uploadImage = React.useCallback(
     async (path: string, fileBody: File) => {

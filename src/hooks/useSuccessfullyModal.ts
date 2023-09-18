@@ -6,8 +6,6 @@ type SuccessfullyModalStore = {
   onClose: () => void;
   title: string;
   setTitle: (title: string) => void;
-  description?: string;
-  setDescription: (description: string) => void;
 };
 
 export const useSuccessfullyModal = create<SuccessfullyModalStore>((set) => ({
@@ -16,6 +14,4 @@ export const useSuccessfullyModal = create<SuccessfullyModalStore>((set) => ({
   onClose: () => set({ isOpen: false }),
   title: '',
   setTitle: (title: string) => set({ title }),
-  description: '',
-  setDescription: (description?: string) => set({ description }),
 }));
