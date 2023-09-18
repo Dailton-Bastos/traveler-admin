@@ -17,11 +17,10 @@ import { CityFormData } from '~/@types/types';
 
 type Props = {
   className?: string;
+  handleChangeStep: (step: '01' | '02') => void;
 };
 
-export const NewCityForm = (props: Props) => {
-  const { className } = props;
-
+export const NewCityForm = ({ className, handleChangeStep }: Props) => {
   const { getValues } = useFormContext<CityFormData>();
 
   const cityValues = getValues(['cityName', 'cityDescription', 'cityImage']);
@@ -34,21 +33,13 @@ export const NewCityForm = (props: Props) => {
     return !value === true;
   });
 
-  const goToNextStep = useCityStore((state) => state.setCurrentStep);
-
   const handleGoToNextStep = React.useCallback(() => {
     if (disableNextStepButton) {
       return toast.error('Preencha os campos acima');
     }
 
-    goToNextStep('02');
-
-    window.scroll({
-      top: 0,
-      left: 0,
-      behavior: 'smooth',
-    });
-  }, [goToNextStep, disableNextStepButton]);
+    handleChangeStep('02');
+  }, [handleChangeStep, disableNextStepButton]);
 
   return (
     <div className={twMerge(`w-full`, className)}>

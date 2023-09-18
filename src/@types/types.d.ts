@@ -52,3 +52,26 @@ export type MdEditorType = {
 };
 
 export type CityFormData = zod.infer<typeof cityFormValidationSchema>;
+
+export type CityData = {
+  name: string;
+  description: string;
+  image_path: string;
+};
+
+export type AddressData = {
+  postal_code: string;
+  street: string;
+  neighborhood: string;
+  number: string;
+  complement?: string;
+};
+
+export type PlaceData = {
+  city_id: number;
+  address_id: number;
+  category_id: number;
+  name: string;
+  description: string;
+  image_path: string;
+};

@@ -103,7 +103,7 @@ export const PlaceAddress = () => {
         </h2>
       </div>
 
-      <div className="py-10">
+      <div className="pt-10">
         <div className="flex items-center justify-start gap-4">
           <div className="w-[168px]">
             <div className="w-full relative mb-6">

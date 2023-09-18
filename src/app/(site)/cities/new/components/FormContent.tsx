@@ -14,38 +14,24 @@ import { NewCityForm } from './NewCityForm';
 import { NewPlaceForm } from './NewPlaceForm';
 import { cityFormValidationSchema } from '~/schemas/newCitySchema';
 import { useSuccessfullyModal } from '~/hooks/useSuccessfullyModal';
-import type { Category, CityFormData } from '~/@types/types';
+import type {
+  AddressData,
+  Category,
+  CityData,
+  CityFormData,
+  PlaceData,
+} from '~/@types/types';
+import { Alert } from '~/components/Alert';
+import { Button } from '~/components/Button';
+import { RotatingLines } from 'react-loader-spinner';
 
 type Props = {
   categories: Category[];
 };
 
-type CityData = {
-  name: string;
-  description: string;
-  image_path: string;
-};
-
-type AddressData = {
-  postal_code: string;
-  street: string;
-  neighborhood: string;
-  number: string;
-  complement?: string;
-};
-
-type PlaceData = {
-  city_id: number;
-  address_id: number;
-  category_id: number;
-  name: string;
-  description: string;
-  image_path: string;
-};
-
 export const FormContent = ({ categories = [] }: Props) => {
   const currentStep = useCityStore((state) => state.currentStep);
-  const goToPreviousStep = useCityStore((state) => state.setCurrentStep);
+  const changeCurrentStep = useCityStore((state) => state.setCurrentStep);
 
   const supabaseClient = useSupabaseClient();
   const router = useRouter();
@@ -64,9 +50,24 @@ export const FormContent = ({ categories = [] }: Props) => {
     },
   });
 
-  const { handleSubmit, reset } = form;
+  const { handleSubmit, reset, formState } = form;
+
+  const { isSubmitting } = formState;
 
   const { onOpenChange, setTitle } = useSuccessfullyModal();
+
+  const handleChangeStep = React.useCallback(
+    (step: '01' | '02') => {
+      changeCurrentStep(step);
+
+      window.scroll({
+        top: 0,
+        left: 0,
+        behavior: 'smooth',
+      });
+    },
+    [changeCurrentStep]
+  );
 
   const sucessfullyModal = React.useCallback(() => {
     setTitle('Perfil cadastrado!');
@@ -90,15 +91,9 @@ export const FormContent = ({ categories = [] }: Props) => {
 
   const createNewCity = React.useCallback(
     async (cityData: CityData) => {
-      const { image_path, name, description } = cityData;
-
       const { data, error } = await supabaseClient
         .from('cities')
-        .insert({
-          image_path,
-          name,
-          description,
-        })
+        .insert(cityData)
         .select();
 
       return { data, error };
@@ -108,18 +103,9 @@ export const FormContent = ({ categories = [] }: Props) => {
 
   const createNewAddress = React.useCallback(
     async (addressData: AddressData) => {
-      const { postal_code, street, neighborhood, number, complement } =
-        addressData;
-
       const { data, error } = await supabaseClient
         .from('addresses')
-        .insert({
-          postal_code,
-          street,
-          neighborhood,
-          number,
-          complement,
-        })
+        .insert(addressData)
         .select();
 
       return { data, error };
@@ -129,23 +115,7 @@ export const FormContent = ({ categories = [] }: Props) => {
 
   const createNewPlace = React.useCallback(
     async (placeData: PlaceData) => {
-      const {
-        city_id,
-        address_id,
-        category_id,
-        image_path,
-        name,
-        description,
-      } = placeData;
-
-      const { error } = await supabaseClient.from('places').insert({
-        city_id,
-        address_id,
-        category_id,
-        image_path,
-        name,
-        description,
-      });
+      const { error } = await supabaseClient.from('places').insert(placeData);
 
       return { error };
     },
@@ -229,7 +199,7 @@ export const FormContent = ({ categories = [] }: Props) => {
         reset();
 
         router.push('/cities');
-        goToPreviousStep('01');
+        changeCurrentStep('01');
       } catch (_) {
         return toast.error('Ocorreu um error!');
       }
@@ -242,7 +212,7 @@ export const FormContent = ({ categories = [] }: Props) => {
       createNewPlace,
       reset,
       router,
-      goToPreviousStep,
+      changeCurrentStep,
     ]
   );
 
@@ -250,12 +220,56 @@ export const FormContent = ({ categories = [] }: Props) => {
     <div className="w-full">
       <FormProvider {...form}>
         <form onSubmit={handleSubmit(onSubmit)}>
-          <NewCityForm className={currentStep === '02' ? 'hidden' : ''} />
+          <NewCityForm
+            className={currentStep === '02' ? 'hidden' : ''}
+            handleChangeStep={handleChangeStep}
+          />
 
           <NewPlaceForm
             className={currentStep === '01' ? 'hidden' : ''}
             categories={categories}
           />
+
+          {currentStep === '02' && (
+            <div className="flex items-center justify-between px-16 py-12">
+              <Alert />
+
+              <div className="flex items-center justify-center gap-2">
+                <Button
+                  type="button"
+                  disabled={isSubmitting}
+                  className="bg-blue-500 font-semibold hover:bg-blue-900"
+                  onClick={() => handleChangeStep('01')}
+                >
+                  Voltar
+                </Button>
+
+                <Button
+                  type="submit"
+                  disabled={isSubmitting}
+                  className="bg-green-500 font-semibold hover:bg-green-600"
+                >
+                  <div
+                    className="
+                      flex
+                      items-center
+                      justify-center
+                      gap-4
+                    "
+                  >
+                    <RotatingLines
+                      strokeColor="#fff"
+                      strokeWidth="3"
+                      animationDuration="0.95"
+                      width="30"
+                      visible={isSubmitting}
+                    />
+                    Concluir cadastro
+                  </div>
+                </Button>
+              </div>
+            </div>
+          )}
         </form>
       </FormProvider>
     </div>
