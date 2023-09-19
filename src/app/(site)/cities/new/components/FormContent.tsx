@@ -3,7 +3,6 @@
 import React from 'react';
 import { FormProvider, SubmitHandler, useForm } from 'react-hook-form';
 import { toast } from 'react-hot-toast';
-import { useRouter } from 'next/navigation';
 import { useSupabaseClient } from '@supabase/auth-helpers-react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import uniqid from 'uniqid';
@@ -13,7 +12,6 @@ import { useCityStore } from '~/stores/useCityStore';
 import { NewCityForm } from './NewCityForm';
 import { NewPlaceForm } from './NewPlaceForm';
 import { cityFormValidationSchema } from '~/schemas/newCitySchema';
-import { useSuccessfullyModal } from '~/hooks/useSuccessfullyModal';
 import type {
   AddressData,
   Category,
@@ -24,17 +22,19 @@ import type {
 import { Alert } from '~/components/Alert';
 import { Button } from '~/components/Button';
 import { RotatingLines } from 'react-loader-spinner';
+import { SubmitSuccessfullyModal } from './SubmitSuccessfullyModal';
 
 type Props = {
   categories: Category[];
 };
 
 export const FormContent = ({ categories = [] }: Props) => {
+  const [showSuccessfullyModal, setShowSucessfullyModal] =
+    React.useState(false);
   const currentStep = useCityStore((state) => state.currentStep);
   const changeCurrentStep = useCityStore((state) => state.setCurrentStep);
 
   const supabaseClient = useSupabaseClient();
-  const router = useRouter();
 
   const form = useForm<CityFormData>({
     resolver: zodResolver(cityFormValidationSchema),
@@ -54,8 +54,6 @@ export const FormContent = ({ categories = [] }: Props) => {
 
   const { isSubmitting } = formState;
 
-  const { onOpenChange, setTitle } = useSuccessfullyModal();
-
   const handleChangeStep = React.useCallback(
     (step: '01' | '02') => {
       changeCurrentStep(step);
@@ -69,11 +67,9 @@ export const FormContent = ({ categories = [] }: Props) => {
     [changeCurrentStep]
   );
 
-  const sucessfullyModal = React.useCallback(() => {
-    setTitle('Perfil cadastrado!');
-
-    onOpenChange();
-  }, [setTitle, onOpenChange]);
+  const onCloseSucessfullyModal = React.useCallback(() => {
+    setShowSucessfullyModal(false);
+  }, []);
 
   const uploadImage = React.useCallback(
     async (path: string, fileBody: File) => {
@@ -136,7 +132,7 @@ export const FormContent = ({ categories = [] }: Props) => {
         const { data: cityImageData, error: cityImageError } =
           await uploadImage(cityImagePath, cityImage);
 
-        if (cityImageError) return toast.error('Ocorreu um error!');
+        if (cityImageError) return toast.error('Error ao salvar imagem!');
 
         const dataCity = {
           name: data?.cityName,
@@ -144,8 +140,11 @@ export const FormContent = ({ categories = [] }: Props) => {
           description: data?.cityDescription,
         };
 
-        const dataAddress = {
-          ...data?.address,
+        const dataAddress: AddressData = {
+          street: data?.address?.street,
+          neighborhood: data?.address?.neighborhood,
+          number: data?.address?.number,
+          complement: data?.address?.complement,
           postal_code: data?.address?.zipCode,
         };
 
@@ -176,7 +175,7 @@ export const FormContent = ({ categories = [] }: Props) => {
         const { data: placeImageData, error: placeImageError } =
           await uploadImage(placeImagePath, placeImage);
 
-        if (placeImageError) return toast.error('Ocorreu um error!');
+        if (placeImageError) return toast.error('Error ao salvar imagem!');
 
         const city_id = resolvedCity?.data[0]?.id;
         const address_id = resolvedAddress?.data[0]?.id;
@@ -192,26 +191,23 @@ export const FormContent = ({ categories = [] }: Props) => {
 
         const { error } = await createNewPlace(placeData);
 
-        if (error) return toast.error('Ocorreu um erro!');
+        if (error) return toast.error('Error ao salvar local!');
 
-        sucessfullyModal();
+        setShowSucessfullyModal(true);
 
         reset();
 
-        router.push('/cities');
         changeCurrentStep('01');
       } catch (_) {
         return toast.error('Ocorreu um error!');
       }
     },
     [
-      sucessfullyModal,
       uploadImage,
       createNewCity,
       createNewAddress,
       createNewPlace,
       reset,
-      router,
       changeCurrentStep,
     ]
   );
@@ -272,6 +268,11 @@ export const FormContent = ({ categories = [] }: Props) => {
           )}
         </form>
       </FormProvider>
+
+      <SubmitSuccessfullyModal
+        isOpen={showSuccessfullyModal}
+        onCloseSucessfullyModal={onCloseSucessfullyModal}
+      />
     </div>
   );
 };
