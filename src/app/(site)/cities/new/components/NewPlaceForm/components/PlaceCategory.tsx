@@ -4,6 +4,7 @@ import { ErrorMessage } from '~/components/ErrorMessage';
 import { RadioButtonCategory } from '~/components/RadioButtonCategory';
 import { useInputsErrors } from '~/hooks/useInputsErrors';
 import type { Category, CityFormData } from '~/@types/types';
+import { usePlace } from '~/hooks/usePlace';
 
 type Props = {
   categories: Category[];
@@ -11,6 +12,8 @@ type Props = {
 
 export const PlaceCategory = ({ categories }: Props) => {
   const [categoryId, setCategoryId] = React.useState('');
+
+  const setPlaceCategory = usePlace((state) => state.setCategory);
 
   const { setValue, formState } = useFormContext<CityFormData>();
 
@@ -48,7 +51,10 @@ export const PlaceCategory = ({ categories }: Props) => {
               name="categoryId"
               id={id}
               label={item?.name}
-              onChange={() => handleChangeCategory(id)}
+              onChange={() => {
+                handleChangeCategory(id);
+                setPlaceCategory(item);
+              }}
               category={item}
               checked={categoryId === id}
               disabled={isSubmitting}

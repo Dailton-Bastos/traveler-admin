@@ -1,14 +1,13 @@
 import { useSupabaseClient } from '@supabase/auth-helpers-react';
-import { Category } from '~/@types/types';
 
-export const useLoadImage = (category: Category) => {
+export const useLoadImage = (image_path: string | undefined) => {
   const supabaseClient = useSupabaseClient();
 
-  if (!category) return null;
+  if (!image_path) return null;
 
   const { data: imageData } = supabaseClient.storage
     .from('images')
-    .getPublicUrl(category.image_path);
+    .getPublicUrl(image_path);
 
   return imageData?.publicUrl;
 };

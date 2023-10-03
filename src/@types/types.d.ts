@@ -75,3 +75,16 @@ export type PlaceData = {
   description: string;
   image_path: string;
 };
+
+export type CityCard = {
+  id: string;
+  name: string;
+  image_path: string | undefined;
+  totalPlaces: number;
+};
+
+export type PlaceCard = {
+  id: string;
+  name: string;
+  image_path: string | undefined;
+};

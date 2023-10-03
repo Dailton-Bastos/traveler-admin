@@ -15,6 +15,7 @@ import { cityFormValidationSchema } from '~/schemas/newCitySchema';
 import type {
   AddressData,
   Category,
+  CityCard,
   CityData,
   CityFormData,
   PlaceData,
@@ -23,6 +24,7 @@ import { Alert } from '~/components/Alert';
 import { Button } from '~/components/Button';
 import { RotatingLines } from 'react-loader-spinner';
 import { SubmitSuccessfullyModal } from './SubmitSuccessfullyModal';
+import { usePlace } from '~/hooks/usePlace';
 
 type Props = {
   categories: Category[];
@@ -31,8 +33,17 @@ type Props = {
 export const FormContent = ({ categories = [] }: Props) => {
   const [showSuccessfullyModal, setShowSucessfullyModal] =
     React.useState(false);
+
+  const [city, setCity] = React.useState<CityCard>({
+    id: '',
+    name: '',
+    image_path: '',
+    totalPlaces: 0,
+  });
+
   const currentStep = useCityStore((state) => state.currentStep);
   const changeCurrentStep = useCityStore((state) => state.setCurrentStep);
+  const setPlace = usePlace((state) => state.setPlace);
 
   const supabaseClient = useSupabaseClient();
 
@@ -111,9 +122,12 @@ export const FormContent = ({ categories = [] }: Props) => {
 
   const createNewPlace = React.useCallback(
     async (placeData: PlaceData) => {
-      const { error } = await supabaseClient.from('places').insert(placeData);
+      const { data, error } = await supabaseClient
+        .from('places')
+        .insert(placeData)
+        .select();
 
-      return { error };
+      return { data, error };
     },
     [supabaseClient]
   );
@@ -133,6 +147,13 @@ export const FormContent = ({ categories = [] }: Props) => {
           await uploadImage(cityImagePath, cityImage);
 
         if (cityImageError) return toast.error('Error ao salvar imagem!');
+
+        setCity((prev) => {
+          return {
+            ...prev,
+            image_path: cityImageData?.path,
+          };
+        });
 
         const dataCity = {
           name: data?.cityName,
@@ -166,6 +187,18 @@ export const FormContent = ({ categories = [] }: Props) => {
         if (!resolvedCity?.data) return;
         if (!resolvedAddress?.data) return;
 
+        const cityData = resolvedCity?.data[0];
+
+        if (cityData) {
+          setCity((prev) => {
+            return {
+              ...prev,
+              id: cityData?.id,
+              name: cityData?.name,
+            };
+          });
+        }
+
         const placeImage: File = data?.placeImage?.[0];
 
         if (!placeImage) return toast.error('Adicione uma foto do local');
@@ -189,9 +222,22 @@ export const FormContent = ({ categories = [] }: Props) => {
           image_path: placeImageData?.path ?? '',
         };
 
-        const { error } = await createNewPlace(placeData);
+        const { data: newPlaceData, error } = await createNewPlace(placeData);
 
         if (error) return toast.error('Error ao salvar local!');
+
+        const newPlace = newPlaceData?.[0];
+
+        if (newPlace) {
+          setCity((prev) => {
+            return {
+              ...prev,
+              totalPlaces: 1,
+            };
+          });
+
+          setPlace({ ...newPlace });
+        }
 
         setShowSucessfullyModal(true);
 
@@ -209,6 +255,7 @@ export const FormContent = ({ categories = [] }: Props) => {
       createNewPlace,
       reset,
       changeCurrentStep,
+      setPlace,
     ]
   );
 
@@ -269,10 +316,13 @@ export const FormContent = ({ categories = [] }: Props) => {
         </form>
       </FormProvider>
 
-      <SubmitSuccessfullyModal
-        isOpen={showSuccessfullyModal}
-        onCloseSucessfullyModal={onCloseSucessfullyModal}
-      />
+      {city && (
+        <SubmitSuccessfullyModal
+          isOpen={showSuccessfullyModal}
+          onCloseSucessfullyModal={onCloseSucessfullyModal}
+          city={city}
+        />
+      )}
     </div>
   );
 };

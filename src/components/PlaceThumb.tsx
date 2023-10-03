@@ -2,8 +2,23 @@ import React from 'react';
 import { FiTrash } from 'react-icons/fi';
 import { RiEditLine } from 'react-icons/ri';
 import Image from 'next/image';
+import { useRouter } from 'next/navigation';
+import { usePlace } from '~/hooks/usePlace';
+import { useLoadImage } from '~/hooks/useLoadImage';
 
 export const PlaceThumb = () => {
+  const category = usePlace((state) => state.category);
+  const place = usePlace((state) => state.place);
+
+  const categoryImage = useLoadImage(category?.image_path);
+  const placeImage = useLoadImage(place?.image_path);
+
+  const router = useRouter();
+
+  const handleToEditPage = React.useCallback(() => {
+    router.push(`/cities/place/${place?.id}/edit`);
+  }, [router, place]);
+
   return (
     <div
       className="
@@ -54,7 +69,7 @@ export const PlaceThumb = () => {
           -
         </span>
       </div>
-      <div className="w-full h-[160px] overflow-hidden relative rounded-t-2xl">
+      <div className="w-full relative rounded-t-2xl">
         <div
           className="
             flex
@@ -76,6 +91,7 @@ export const PlaceThumb = () => {
             border
             rounded-l-lg
           "
+            onClick={handleToEditPage}
           >
             <RiEditLine size={20} color="#617480" />
           </button>
@@ -93,35 +109,39 @@ export const PlaceThumb = () => {
           </button>
         </div>
 
-        <Image
-          src="/images/place_thumb.png"
-          alt=""
-          loading="lazy"
-          width={256}
-          height={160}
-          style={{ objectFit: 'cover' }}
-        />
+        {placeImage && (
+          <Image
+            src={placeImage}
+            alt={place?.name}
+            loading="lazy"
+            width={256}
+            height={160}
+            style={{ objectFit: 'cover' }}
+          />
+        )}
       </div>
 
       <div className="divide-y">
         <div className="p-6">
           <h4 className="text-xl font-semibold font-barlow text-blue-900">
-            Doce & Companhia
+            {place?.name}
           </h4>
         </div>
 
         <div className="flex items-center justify-between p-6">
           <span className="text-gray-500 font-roboto text-base">
-            Comida e Bebida
+            {category?.name}
           </span>
 
-          <Image
-            src="/images/category.png"
-            alt=""
-            width={24}
-            height={24}
-            style={{ objectFit: 'cover' }}
-          />
+          {categoryImage && (
+            <Image
+              src={categoryImage}
+              alt={category?.name}
+              width={24}
+              height={24}
+              style={{ objectFit: 'cover' }}
+            />
+          )}
         </div>
       </div>
     </div>

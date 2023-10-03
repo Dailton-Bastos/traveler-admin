@@ -8,15 +8,18 @@ import { SuccessfullyIcon } from './SuccessfullyIcon';
 import { Button } from '~/components/Button';
 import { CityThumb } from '../../../components/CityThumb';
 import { PlaceThumb } from '~/components/PlaceThumb';
+import type { CityCard } from '~/@types/types';
 
 type Props = {
   isOpen: boolean;
   onCloseSucessfullyModal: () => void;
+  city: CityCard;
 };
 
 export const SubmitSuccessfullyModal = ({
   isOpen,
   onCloseSucessfullyModal,
+  city,
 }: Props) => {
   const router = useRouter();
 
@@ -83,7 +86,7 @@ export const SubmitSuccessfullyModal = ({
         </div>
 
         <div className="flex items-center flex-col gap-y-10">
-          <CityThumb />
+          <CityThumb city={city} />
 
           <PlaceThumb />
         </div>

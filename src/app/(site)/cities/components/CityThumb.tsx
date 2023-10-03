@@ -1,27 +1,38 @@
 import React from 'react';
 import { FiTrash } from 'react-icons/fi';
 import { RiEditLine } from 'react-icons/ri';
+import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 
-// type Props = {
-//   image_url: string
-//   name: string
-//   totalPlaces: string
-// }
+import { useLoadImage } from '~/hooks/useLoadImage';
+import type { CityCard } from '~/@types/types';
 
-export const CityThumb = () => {
+type Props = {
+  city: CityCard;
+};
+
+export const CityThumb = ({ city }: Props) => {
+  const { id, image_path, name, totalPlaces } = city;
+
+  const imageUrl = useLoadImage(image_path);
+
+  const router = useRouter();
+
+  const handleToEditPage = React.useCallback(() => {
+    router.push(`/cities/${id}/edit`);
+  }, [router, id]);
+
   return (
     <div
       className="
         bg-white
           w-[256px]
-          h-[266px]
           rounded-2xl
           shadow
           overflow-hidden
         "
     >
-      <div className="w-full h-[160px] overflow-hidden relative">
+      <div className="w-full relative">
         <div
           className="
           flex
@@ -43,6 +54,7 @@ export const CityThumb = () => {
               border
               rounded-l-lg
             "
+            onClick={handleToEditPage}
           >
             <RiEditLine size={20} color="#617480" />
           </button>
@@ -60,22 +72,26 @@ export const CityThumb = () => {
           </button>
         </div>
 
-        <Image
-          src="/images/city_thumb.png"
-          alt=""
-          loading="lazy"
-          width={256}
-          height={160}
-          style={{ objectFit: 'cover' }}
-        />
+        {imageUrl && (
+          <Image
+            src={imageUrl}
+            alt=""
+            loading="lazy"
+            width={256}
+            height={160}
+            style={{ objectFit: 'cover' }}
+          />
+        )}
       </div>
 
       <div className="p-6">
         <h4 className="text-xl font-semibold font-barlow text-blue-900">
-          Florianópolis
+          {name}
         </h4>
 
-        <span className="text-gray-500 font-roboto text-base">1 local</span>
+        <span className="text-gray-500 font-roboto text-base">
+          {totalPlaces} {totalPlaces > 1 ? 'locais' : 'local'}
+        </span>
       </div>
     </div>
   );
